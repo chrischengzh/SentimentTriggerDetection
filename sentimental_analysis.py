@@ -1,4 +1,4 @@
-# V 1.0.0
+# V 1.0.1 Check and use MPS/CUDA/CPU
 import torch
 from transformers import (
     AutoTokenizer,
