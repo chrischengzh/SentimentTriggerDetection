@@ -1,0 +1,10 @@
+# 忽略大模型文件
+*.safetensors
+*.pt
+*.bin
+*.h5
+*.log
+
+# Mac 系统垃圾文件
+.DS_Store
+Icon?
