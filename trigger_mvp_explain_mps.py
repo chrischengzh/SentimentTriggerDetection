@@ -6,7 +6,6 @@ from transformers import (
     pipeline
 )
 import time
-from datetime import datetime
 
 # =========================
 # 设备选择
@@ -28,7 +27,7 @@ else:
 # =========================
 # Sentiment Analysis (情绪分析)
 # =========================
-sentiment_model_name = "distilbert-base-uncased-finetuned-sst-2-english"
+sentiment_model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
 sentiment_tokenizer = AutoTokenizer.from_pretrained(sentiment_model_name)
 sentiment_model = AutoModelForSequenceClassification.from_pretrained(sentiment_model_name)
 sentiment_model.to(device)

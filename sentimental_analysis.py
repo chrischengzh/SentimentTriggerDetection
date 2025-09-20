@@ -5,8 +5,8 @@ from transformers import (
     AutoModelForSequenceClassification,
     pipeline
 )
+
 import time
-from datetime import datetime
 
 # =========================
 # 设备选择
