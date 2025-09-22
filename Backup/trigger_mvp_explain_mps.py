@@ -1,17 +1,11 @@
-# V1.0.1
-import time
 import torch
 from transformers import (
     AutoTokenizer,
     AutoModelForSequenceClassification,
     pipeline
 )
-import json
-from Backup.trigger_mvp_explain_mps import explain_model_name
-def load_labels(config_path, domain="family"):
-    with open(config_path, "r", encoding="utf-8") as f:
-        all_labels = json.load(f)
-    return all_labels.get(domain, [])
+import time
+from datetime import datetime
 
 # =========================
 # 设备选择
@@ -33,7 +27,7 @@ else:
 # =========================
 # Sentiment Analysis (情绪分析)
 # =========================
-sentiment_model_name = "IDEA-CCNL/Erlangshen-MegatronBert-1.3B-Sentiment"
+sentiment_model_name = "distilbert-base-uncased-finetuned-sst-2-english"
 sentiment_tokenizer = AutoTokenizer.from_pretrained(sentiment_model_name)
 sentiment_model = AutoModelForSequenceClassification.from_pretrained(sentiment_model_name)
 sentiment_model.to(device)
@@ -49,13 +43,12 @@ sentiment_analyzer = pipeline(
 # =========================
 # Zero-shot Classification (解释层)
 # =========================
-# explain_model_name = "facebook/bart-large-mnli"
-explain_model_name = "IDEA-CCNL/Erlangshen-Roberta-330M-NLI"
+explain_model_name = "facebook/bart-large-mnli"
 explain_tokenizer = AutoTokenizer.from_pretrained(explain_model_name)
 explain_model = AutoModelForSequenceClassification.from_pretrained(explain_model_name)
 explain_model.to(device)
 
-# zero-shot classification pipeline 用零样本分类模型分析，这句话可能“触发”的原因
+# zero-shot classification pipeline
 explain_analyzer = pipeline(
     "zero-shot-classification",
     model=explain_model,
@@ -67,40 +60,38 @@ explain_analyzer = pipeline(
 # Trigger Detection 函数
 # =========================
 def detect_trigger(conversation):
-    t1 = time.time()
     results = [sentiment_analyzer(utt)[0] for utt in conversation]
-    t2 = time.time()
-    diff_seconds = round(t2 - t1, 2)
-    print("\nSentiment Analysis耗时：", diff_seconds, "秒")
+
     print("\n情绪分析结果：")
     for i, (utt, res) in enumerate(zip(conversation, results)):
         print(f"{i+1}. {utt} --> {res}")
 
     last_res = results[-1]
-    if last_res['label'] != "Negative":
+    if last_res['label'] != "NEGATIVE":
         print("\n❌ 最后一句不是负面情绪，不需要触发检测。")
         return None, None
 
-    trigger_idx = -1    # 初始化触发点的索引，-1 表示还没找到
-    max_shift = 0   # 保存目前发现的最大“情绪分数变化”
-    for i in range(len(results)-1): # 遍历 results 列表（对话每一句的情绪分析结果），到倒数第二句
-        # 计算“情绪分数变化”
+    trigger_idx = -1
+    max_shift = 0
+    for i in range(len(results)-1):
         shift = last_res['score'] - results[i]['score'] if results[i]['label'] != "NEGATIVE" else 0
-        if shift > max_shift:   # 如果这次的变化更大
-            max_shift = shift   # 更新最大变化
-            trigger_idx = i # 记录触发点的位置
+        if shift > max_shift:
+            max_shift = shift
+            trigger_idx = i
 
     if trigger_idx >= 0:
-        trigger_sentence = conversation[trigger_idx]    # 对话里触发最后情绪爆发的关键句
+        trigger_sentence = conversation[trigger_idx]
         print(f"\n⚠️ 触发点可能是第 {trigger_idx+1} 句: \"{trigger_sentence}\"")
 
-        # 根据场景选取trigger_labels.json里的family候选解释标签
-        candidate_labels = load_labels("trigger_labels.json", domain="family")
-        t1 = time.time()
+        # 候选解释标签
+        candidate_labels = [
+            "责备或指责",
+            "语气不耐烦",
+            "缺乏关心或支持",
+            "表达模糊，容易被误解",
+            "带有批评意味"
+        ]
         explanation = explain_analyzer(trigger_sentence, candidate_labels)
-        t2 = time.time()
-        diff_seconds = round(t2 - t1, 2)
-        print("\nTrigger Detection耗时：", diff_seconds, "秒")
         print("\n🔎 可能的触发原因：")
         for lbl, score in zip(explanation["labels"], explanation["scores"]):
             print(f"- {lbl} ({score:.2f})")
@@ -116,20 +107,12 @@ def detect_trigger(conversation):
 # =========================
 t1 = time.time()
 if __name__ == "__main__":
-    convo_english = [
+    convo = [
         "Hey Cathy, could you help me with my tax refund?",
         "I already told you, that's not my problem.",
         "Why are you being so rude?"
     ]
-    convo_chinese = [
-        "Cathy：其实好多都说不通的，这里也有人suv工签延期被拒的，不知道这个怎么弄。你觉得呢？",
-        "我：有不合理，可以申诉或重新提交申请，但还是要看审核官和运气。没有一条100%的路径。",
-        "Cathy：我也可以不申请工签对我而言没有意义。",
-        '我：这个你可以再考虑一下，有决定了我们开个股东会议。',
-        "Cathy：我工签被拒和股东大会有啥关联，要不找人把我替了，省得那么多麻烦，旅游签简简单单，小孩读大学我也可以回去了。",
-        "Cathy：都来看我笑话，我运气差。"
-    ]
-    detect_trigger(convo_chinese)
+    detect_trigger(convo)
 t2 = time.time()
 diff_seconds = round(t2 - t1, 2)
 print("\n总耗时：", diff_seconds, "秒")
