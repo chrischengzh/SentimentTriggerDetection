@@ -1,13 +1,13 @@
-# V1.0.1
-import time
+# V1.0.2
 import torch
 from transformers import (
     AutoTokenizer,
     AutoModelForSequenceClassification,
     pipeline
 )
+import time
+
 import json
-from Backup.trigger_mvp_explain_mps import explain_model_name
 def load_labels(config_path, domain="family"):
     with open(config_path, "r", encoding="utf-8") as f:
         all_labels = json.load(f)
@@ -49,7 +49,6 @@ sentiment_analyzer = pipeline(
 # =========================
 # Zero-shot Classification (解释层)
 # =========================
-# explain_model_name = "facebook/bart-large-mnli"
 explain_model_name = "IDEA-CCNL/Erlangshen-Roberta-330M-NLI"
 explain_tokenizer = AutoTokenizer.from_pretrained(explain_model_name)
 explain_model = AutoModelForSequenceClassification.from_pretrained(explain_model_name)
@@ -94,7 +93,15 @@ def detect_trigger(conversation):
         trigger_sentence = conversation[trigger_idx]    # 对话里触发最后情绪爆发的关键句
         print(f"\n⚠️ 触发点可能是第 {trigger_idx+1} 句: \"{trigger_sentence}\"")
 
-        # 根据场景选取trigger_labels.json里的family候选解释标签
+        # # 候选解释标签
+        # candidate_labels = [
+        #     "责备或指责",
+        #     "语气不耐烦",
+        #     "缺乏关心或支持",
+        #     "表达模糊，容易被误解",
+        #     "带有批评意味"
+        # ]
+        # explanation = explain_analyzer(trigger_sentence, candidate_labels)
         candidate_labels = load_labels("trigger_labels.json", domain="family")
         t1 = time.time()
         explanation = explain_analyzer(trigger_sentence, candidate_labels)
@@ -114,7 +121,6 @@ def detect_trigger(conversation):
 # =========================
 # 测试运行
 # =========================
-t1 = time.time()
 if __name__ == "__main__":
     convo_english = [
         "Hey Cathy, could you help me with my tax refund?",
@@ -130,6 +136,3 @@ if __name__ == "__main__":
         "Cathy：都来看我笑话，我运气差。"
     ]
     detect_trigger(convo_chinese)
-t2 = time.time()
-diff_seconds = round(t2 - t1, 2)
-print("\n总耗时：", diff_seconds, "秒")

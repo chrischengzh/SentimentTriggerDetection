@@ -1,12 +1,11 @@
 # V 1.0.1 Check and use MPS/CUDA/CPU
+import time
 import torch
 from transformers import (
     AutoTokenizer,
     AutoModelForSequenceClassification,
     pipeline
 )
-
-import time
 
 # =========================
 # 设备选择
@@ -26,7 +25,7 @@ else:
     print("Using CPU")
 
 # 加载模型
-model_name = "IDEA-CCNL/Erlangshen-Roberta-110M-Sentiment"
+model_name = "IDEA-CCNL/Erlangshen-MegatronBert-1.3B-Sentiment"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 model.to(device)
@@ -49,16 +48,14 @@ dialogues = [
     "Cathy：都来看我笑话，我运气差。"
 ]
 
-t1 = time.time()
-
 # 对每句话做情绪识别
 print("情绪识别结果：")
+t1 = time.time()
 for i, sentence in enumerate(dialogues, 1):
     result = sentiment(sentence)[0]  # [{'label': 'positive', 'score': 0.95}]
     label = result['label']
     score = round(result['score'], 4)
     print(f"{i}. {sentence} -> {label} (score={score})")
-
 t2 = time.time()
 diff_seconds = round(t2 - t1, 2)
 print("\n总耗时：", diff_seconds, "秒")
