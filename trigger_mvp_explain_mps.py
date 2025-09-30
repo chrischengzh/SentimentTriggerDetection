@@ -1,22 +1,24 @@
 # V1.0.2
+import time
+import json
 import torch
 from transformers import (
     AutoTokenizer,
     AutoModelForSequenceClassification,
     pipeline
 )
-import time
 
-import json
+# =========================
+# 场景触发词典:加载family, work, study...
+# =========================
 def load_labels(config_path, domain="family"):
     with open(config_path, "r", encoding="utf-8") as f:
         all_labels = json.load(f)
     return all_labels.get(domain, [])
 
 # =========================
-# 设备选择
+# 设备选择:自动检测是否支持 Apple Silicon GPU (MPS)
 # =========================
-# 自动检测是否支持 Apple Silicon GPU (MPS)
 if torch.backends.mps.is_available():
     device = torch.device("mps")
     device_id = 0  # pipeline 里用 0 表示启用 GPU
@@ -33,7 +35,7 @@ else:
 # =========================
 # Sentiment Analysis (情绪分析)
 # =========================
-sentiment_model_name = "IDEA-CCNL/Erlangshen-MegatronBert-1.3B-Sentiment"
+sentiment_model_name = "IDEA-CCNL/Erlangshen-Roberta-330M-Sentiment"
 sentiment_tokenizer = AutoTokenizer.from_pretrained(sentiment_model_name)
 sentiment_model = AutoModelForSequenceClassification.from_pretrained(sentiment_model_name)
 sentiment_model.to(device)
@@ -93,15 +95,6 @@ def detect_trigger(conversation):
         trigger_sentence = conversation[trigger_idx]    # 对话里触发最后情绪爆发的关键句
         print(f"\n⚠️ 触发点可能是第 {trigger_idx+1} 句: \"{trigger_sentence}\"")
 
-        # # 候选解释标签
-        # candidate_labels = [
-        #     "责备或指责",
-        #     "语气不耐烦",
-        #     "缺乏关心或支持",
-        #     "表达模糊，容易被误解",
-        #     "带有批评意味"
-        # ]
-        # explanation = explain_analyzer(trigger_sentence, candidate_labels)
         candidate_labels = load_labels("trigger_labels.json", domain="family")
         t1 = time.time()
         explanation = explain_analyzer(trigger_sentence, candidate_labels)

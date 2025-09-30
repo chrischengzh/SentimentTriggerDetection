@@ -25,7 +25,7 @@ else:
     print("Using CPU")
 
 # 加载模型
-model_name = "IDEA-CCNL/Erlangshen-MegatronBert-1.3B-Sentiment"
+model_name = "IDEA-CCNL/Erlangshen-Roberta-330M-Sentiment"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 model.to(device)
