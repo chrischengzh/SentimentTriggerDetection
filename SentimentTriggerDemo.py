@@ -31,7 +31,8 @@ sentiment_analyzer = pipeline("sentiment-analysis", model=model, tokenizer=token
 # -----------------------
 # Step 2. 生成式大模型 (Qwen)
 # -----------------------
-gen_model_name = "Qwen/Qwen1.5-1.8B-Chat"  # 建议小模型跑 Demo，7B 会爆内存
+gen_model_name = "IDEA-CCNL/Erlangshen-Roberta-330M-NLI"
+# gen_model_name = "Qwen/Qwen1.5-1.8B-Chat"  # 建议小模型跑 Demo，7B 会爆内存
 gen_tokenizer = AutoTokenizer.from_pretrained(gen_model_name)
 gen_model = AutoModelForCausalLM.from_pretrained(gen_model_name)
 gen_model.to(device)
@@ -93,18 +94,18 @@ def explain_trigger(sentence, candidate_labels):
 # -----------------------
 # Step 3. Demo 流程
 # -----------------------
-conversation = [
-    "我觉得自己好可怜，天天一个人加班。",
-    "你他妈的闭嘴！"
-]
 # conversation = [
-    # "Cathy：其实好多都说不通的，这里也有人suv工签延期被拒的，不知道这个怎么弄。你觉得呢？",
-    # "我：有不合理，可以申诉或重新提交申请，但还是要看审核官和运气。没有一条100%的路径。",
-    # "Cathy：我也可以不申请工签对我而言没有意义。",
-    # '我：这个你可以再考虑一下，有决定了我们开个股东会议。',
-    # "Cathy：我工签被拒和股东大会有啥关联，要不找人把我替了，省得那么多麻烦，旅游签简简单单，小孩读大学我也可以回去了。",
-    # "Cathy：都来看我笑话，我运气差。"
+#     "我觉得自己好可怜，天天一个人加班。",
+#     "你他妈的闭嘴！"
 # ]
+conversation = [
+    "Cathy：其实好多都说不通的，这里也有人suv工签延期被拒的，不知道这个怎么弄。你觉得呢？",
+    "我：有不合理，可以申诉或重新提交申请，但还是要看审核官和运气。没有一条100%的路径。",
+    "Cathy：我也可以不申请工签对我而言没有意义。",
+    '我：这个你可以再考虑一下，有决定了我们开个股东会议。',
+    "Cathy：我工签被拒和股东大会有啥关联，要不找人把我替了，省得那么多麻烦，旅游签简简单单，小孩读大学我也可以回去了。",
+    "Cathy：都来看我笑话，我运气差。"
+]
 
 # 1) 判别式模型逐句情绪分类
 results = sentiment_analyzer(conversation)
