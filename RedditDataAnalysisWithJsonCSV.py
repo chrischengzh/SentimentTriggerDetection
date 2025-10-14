@@ -1,6 +1,7 @@
 import praw
 import csv
 import json
+import time
 from datetime import datetime, timezone   # ✅ 改成 timezone.utc
 
 # 配置 Reddit API
@@ -15,7 +16,8 @@ subreddit = reddit.subreddit("NarcissisticSpouses")
 # 存储结果
 posts_data = []
 
-for post in subreddit.hot(limit=50):  # 先取 50 条
+t1 = time.time()
+for post in subreddit.hot(limit=500):  # 先取 500 条
     post.comments.replace_more(limit=0)  # 展开评论
     comments_data = []
     for comment in post.comments.list()[:10]:  # 每帖取前 10 条评论
@@ -41,6 +43,9 @@ for post in subreddit.hot(limit=50):  # 先取 50 条
     }
 
     posts_data.append(post_info)
+t2 = time.time()
+diff_seconds = round(t2 - t1, 2)
+print("\n抓取Reddit总耗时：", diff_seconds, "秒")
 
 # ===== 导出 CSV（简化版） =====
 csv_file = "reddit_posts.csv"
