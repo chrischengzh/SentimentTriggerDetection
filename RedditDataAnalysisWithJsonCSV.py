@@ -17,7 +17,7 @@ subreddit = reddit.subreddit("NarcissisticSpouses")
 posts_data = []
 
 t1 = time.time()
-for post in subreddit.hot(limit=500):  # 先取 500 条
+for post in subreddit.hot(limit=50):  # 先取 50 条
     post.comments.replace_more(limit=0)  # 展开评论
     comments_data = []
     for comment in post.comments.list()[:10]:  # 每帖取前 10 条评论
