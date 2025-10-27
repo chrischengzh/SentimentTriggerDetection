@@ -8,8 +8,8 @@ from transformers import pipeline
 
 # ---------- 配置 ----------
 SUBREDDIT = "NarcissisticSpouses"
-POST_LIMIT = 100       # 抓取帖子数
-MAX_COMMENTS = 1000    # 评论上限（总量控制）
+POST_LIMIT = 30       # 抓取帖子数
+MAX_COMMENTS = 300    # 评论上限（总量控制）
 OUT_CSV = "ns_posts_comments_npds.csv"
 
 # 建议用环境变量管理密钥
@@ -195,7 +195,8 @@ def fetch_posts_comments():
                 "permalink": f"https://www.reddit.com{getattr(c, 'permalink', '')}"
             })
             taken += 1
-        time.sleep(0.2)  # 轻微限速，友好一点
+        # time.sleep(0.2)  # 轻微限速，友好一点
+
     return pd.DataFrame(rows)
 
 def extract_traits(df: pd.DataFrame, zs):
@@ -223,15 +224,27 @@ def extract_traits(df: pd.DataFrame, zs):
     return pd.DataFrame(out_rows)
 
 def main():
-    print(f"Fetching from r/{SUBREDDIT} ...")
+    print(f"\nFetching from r/{SUBREDDIT} ...")
+    t1 = time.time()
     df = fetch_posts_comments()
+    t2 = time.time()
+    diff_seconds = round(t2 - t1, 2)
+    print("总耗时：", diff_seconds, "秒")
     print(f"Fetched rows: {len(df)}")
 
-    print("Loading zero-shot NLI model ...")
+    print("\nLoading zero-shot NLI model ...")
+    t1 = time.time()
     zs = build_zero_shot()
+    t2 = time.time()
+    diff_seconds = round(t2 - t1, 2)
+    print("总耗时：", diff_seconds, "秒")
 
-    print("Extracting NPD-like traits ...")
+    print("\nExtracting NPD-like traits ...")
+    t1 = time.time()
     result = extract_traits(df, zs)
+    t2 = time.time()
+    diff_seconds = round(t2 - t1, 2)
+    print("总耗时：", diff_seconds, "秒")
 
     # 合并保存：原始 + 抽取结果
     df.to_csv(OUT_CSV.replace(".csv", "_raw.csv"), index=False)
