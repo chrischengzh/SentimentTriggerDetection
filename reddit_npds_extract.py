@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import praw
 from transformers import pipeline
+import json
 
 # ---------- 配置 ----------
 SUBREDDIT = "NarcissisticSpouses"
@@ -18,59 +19,21 @@ REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET", "kVAZEWSTdiYEWk0xjY0mUJ
 REDDIT_UA = os.getenv("REDDIT_UA", "HamoAI/0.1 by u/chrischengzh")
 
 # ---------- 词典：NPD 特征关键词（可扩充） ----------
-TRAIT_LEXICON = {
-    "grandiosity": [
-        r"\b(grandiose|superior|perfect|flawless|never wrong)\b",
-        r"\b(think(s)? (he|she|they) (is|are) (above|better) (everyone|others))\b"
-    ],
-    "fantasy_of_success_power_beauty": [
-        r"\b(fantasi(e|es)|delusion(s)? of (grandeur|success|power|beauty))\b",
-        r"\b(ideal love|soulmate fantasy)\b"
-    ],
-    "special_unique": [
-        r"\b(unique|special|exceptional|too (smart|important))\b"
-    ],
-    "need_for_admiration": [
-        r"\b(admir(e|ation)|praise|constant validation|applause)\b"
-    ],
-    "entitlement": [
-        r"\b(entitled|deserve(s|d)? everything|rules (don'?t|do not) apply)\b"
-    ],
-    "exploitative": [
-        r"\b(exploit(s|ed|ing)?|use(s|d)? me|manipulat(e|ive|ion))\b"
-    ],
-    "lack_of_empathy": [
-        r"\b(lack(s)? of empathy|no empathy|doesn'?t care|no remorse)\b"
-    ],
-    "envious_arrogant": [
-        r"\b(arrogant|smug|condescending|envious|jealous)\b"
-    ],
-    # 操控行为
-    "love_bombing": [
-        r"\b(love ?bomb(ing)?|shower(ed)? me with (gifts|attention|affection))\b"
-    ],
-    "gaslighting": [
-        r"\b(gaslight(ing|ed)?|you('?| )re crazy|made me doubt my reality)\b"
-    ],
-    "triangulation": [
-        r"\b(triangulat(e|ion)|compare(d)? me to (ex|others)|brought a third person)\b"
-    ],
-    "devaluation_discard": [
-        r"\b(devalu(e|ation)|discard(ed)?|sudden devalue|put me down)\b"
-    ],
-    "silent_treatment": [
-        r"\b(silent treatment|stonewall(ing)?|ignore(d|s|ing) me)\b"
-    ],
-    "blame_shifting": [
-        r"\b(blame shifting|it'?s all my fault|never their fault|always blame me)\b"
-    ],
-    "future_faking": [
-        r"\b(future faking|made promises (he|she|they) never kept)\b"
-    ],
-    "hoovering": [
-        r"\b(hoover(ing)?|pull(ed)? me back|suck(ed)? me back)\b"
-    ]
-}
+# 每个键代表一种典型的自恋特征（NPD Trait），
+# 每个值是对应的英文关键词 / 表达的正则匹配模式。
+DATA_DIR = "data"
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon.json")
+
+def load_trait_lexicon(json_path: str) -> dict:
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError("trait_lexicon.json 必须是 {trait: [regex,...]} 结构")
+    return data
+
+# ---------- 词典：NPD 特征关键词（从外置文件加载并编译） ----------
+_raw_lexicon = load_trait_lexicon(TRAIT_LEXICON_PATH)
+re_TRAITS = {k: [re.compile(p, re.I) for p in v] for k, v in _raw_lexicon.items()}
 
 # 识别“配偶/伴侣”指称的启发式
 PARTNER_HINTS = [
@@ -80,7 +43,6 @@ PARTNER_HINTS = [
 ]
 
 re_PARTNER = [re.compile(p, re.I) for p in PARTNER_HINTS]
-re_TRAITS = {k: [re.compile(p, re.I) for p in v] for k, v in TRAIT_LEXICON.items()}
 
 def has_partner_anchor(text: str) -> bool:
     return any(rp.search(text) for rp in re_PARTNER)
