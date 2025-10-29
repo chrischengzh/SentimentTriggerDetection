@@ -1,4 +1,3 @@
-# file: reddit_npds_extract.py
 import os
 import re
 import time
@@ -41,6 +40,11 @@ PARTNER_HINTS = [
     r"\b(ex[- ]?(husband|wife|partner|bf|boyfriend|gf|girlfriend))\b",
     r"\b(he|she|his|her)\b"  # 简化：后续与上下文合并
 ]
+PARTNER_HINTS += [  #增加中文支持
+    r"(我(的)?|我们(的)?|咱们(的)?|我家|我们家|咱家)\s*(丈夫|老公|先生|老伴|妻子|老婆|太太|贤内助|男女朋友|男友|女友|男朋友|女朋友|对象|伴侣|配偶|爱人|另一半)",
+    r"(前任|前夫|前妻|前男友|前女友|前男朋友|前女朋友|前对象|前伴侣|前配偶)",
+    r"(他|她|他的|她的|ta|TA)"
+]
 
 re_PARTNER = [re.compile(p, re.I) for p in PARTNER_HINTS]
 
@@ -65,21 +69,37 @@ def clean_text(s: str) -> str:
 # 把标签写成自然语言描述，便于 NLI 模型判别
 LABEL_TO_DESC = {
     "grandiosity": "shows grandiosity or superiority",
+    "自大夸大": "表现出自大或优越感",
     "fantasy_of_success_power_beauty": "has fantasies of unlimited success, power, beauty or ideal love",
+    "成功权力美貌幻想": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
     "special_unique": "believes they are special and unique",
+    "特殊独一无二": "相信自己特殊而独一无二",
     "need_for_admiration": "needs excessive admiration",
+    "需要崇拜赞美": "需要过度的崇拜与赞美",
     "entitlement": "has a sense of entitlement",
+    "特权感理应拥有": "具有特权感，认为理应拥有一切",
     "exploitative": "is interpersonally exploitative",
+    "利用剥削": "在人际关系中具有剥削与利用倾向",
     "lack_of_empathy": "lacks empathy",
+    "缺乏同理心": "缺乏同理心",
     "envious_arrogant": "is envious or arrogant",
+    "嫉妒傲慢": "表现出嫉妒或傲慢",
     "love_bombing": "uses love bombing",
+    "爱情轰炸": "使用爱情轰炸策略",
     "gaslighting": "gaslights others",
+    "煤气灯操控": "对他人实施煤气灯操控",
     "triangulation": "uses triangulation",
+    "三角关系操纵": "通过引入第三者进行三角操纵",
     "devaluation_discard": "devalues or discards partners",
+    "贬低抛弃": "对伴侣进行贬低或抛弃",
     "silent_treatment": "uses silent treatment",
+    "冷暴力": "以冷处理/冷暴力对待他人",
     "blame_shifting": "engages in blame shifting",
+    "推卸责任": "推卸责任、甩锅他人",
     "future_faking": "does future faking",
-    "hoovering": "does hoovering"
+    "画饼式承诺": "用画饼式承诺进行欺骗",
+    "hoovering": "does hoovering",
+    "回吸拽回": "通过回吸把人再次拽回关系中"
 }
 ZERO_SHOT_LABELS = list(LABEL_TO_DESC.values())
 DESC2KEY = {v: k for k, v in LABEL_TO_DESC.items()}
