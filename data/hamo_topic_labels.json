@@ -1,0 +1,34 @@
+{
+  "parenting_conflicts": {
+    "zh": "育儿冲突",
+    "en": "Parenting Conflicts"
+  },
+  "emotional_abuse": {
+    "zh": "情感虐待",
+    "en": "Emotional Abuse"
+  },
+  "self_doubt_recovery": {
+    "zh": "自我怀疑与疗愈",
+    "en": "Self-Doubt & Recovery"
+  },
+  "control_and_gaslighting": {
+    "zh": "控制与精神操控",
+    "en": "Control & Gaslighting"
+  },
+  "communication_breakdown": {
+    "zh": "沟通崩溃",
+    "en": "Communication Breakdown"
+  },
+  "infidelity_jealousy": {
+    "zh": "出轨与嫉妒",
+    "en": "Infidelity & Jealousy"
+  },
+  "love_bombing_cycle": {
+    "zh": "理想化-贬低-抛弃循环",
+    "en": "Love Bombing Cycle"
+  },
+  "financial_abuse": {
+    "zh": "经济控制",
+    "en": "Financial Abuse"
+  }
+}

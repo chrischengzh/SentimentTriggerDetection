@@ -9,7 +9,7 @@ import json
 
 # ---------- 配置 ----------
 SUBREDDIT = "NarcissisticSpouses"
-POST_LIMIT = 10       # 抓取帖子数
+POST_LIMIT = 30       # 抓取帖子数
 MAX_COMMENTS = 100    # 评论上限（总量控制）
 OUT_CSV = "ns_posts_comments_npds.csv"
 
@@ -22,13 +22,13 @@ REDDIT_UA = os.getenv("REDDIT_UA", "HamoAI/0.1 by u/chrischengzh")
 # 每个键代表一种典型的自恋特征（NPD Trait），
 # 每个值是对应的英文关键词 / 表达的正则匹配模式。
 DATA_DIR = "data"
-TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon_en.json")
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon.json")
 
 def load_trait_lexicon(json_path: str) -> dict:
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, dict):
-        raise ValueError("trait_lexicon_en.json 必须是 {trait: [regex,...]} 结构")
+        raise ValueError("trait_lexicon.json 必须是 {trait: [regex,...]} 结构")
     return data
 
 # ---------- 词典：NPD 特征关键词（从外置文件加载并编译） ----------
