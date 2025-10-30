@@ -8,8 +8,8 @@ import json
 
 # ---------- 配置 ----------
 SUBREDDIT = "NarcissisticSpouses"
-POST_LIMIT = 30       # 抓取帖子数
-MAX_COMMENTS = 100    # 评论上限（总量控制）
+POST_LIMIT = 10       # 抓取帖子数
+MAX_COMMENTS = 30    # 评论上限（总量控制）
 OUT_CSV = "ns_posts_comments_npds.csv"
 
 # 建议用环境变量管理密钥
@@ -110,7 +110,7 @@ def build_zero_shot():
         "zero-shot-classification",
         # model="facebook/bart-large-mnli",  # 英文 NLI 强基线
         model="valhalla/distilbart-mnli-12-1",  # 更轻的模型
-        device=-1,  # 用 CPU（更稳；MPS 对 NLI 不一定更快）
+        device=0,  # 改成GPU 测试下来快一倍多
         tokenizer_kwargs={"truncation": True, "max_length": 384}  # 控制长度
     )
 
