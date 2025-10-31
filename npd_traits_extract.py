@@ -15,12 +15,10 @@ from transformers import pipeline
 
 # ---------- 配置 ----------
 DATA_DIR = "data"
-TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon.json")
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon_chn.json")
 
 # 配偶/伴侣锚点（中英混合）
 PARTNER_HINTS = [
-    r"\b(my|our)\s+(husband|wife|spouse|partner|bf|boyfriend|gf|girlfriend)\b",
-    r"\b(ex[- ]?(husband|wife|partner|bf|boyfriend|gf|girlfriend))\b",
     r"(我(的)?|我们(的)?|咱们(的)?|我家|我们家|咱家)\s*(丈夫|老公|先生|老伴|妻子|老婆|太太|贤内助|男女朋友|男友|女友|男朋友|女朋友|对象|伴侣|配偶|爱人|另一半)",
     r"(前任|前夫|前妻|前男友|前女友|前男朋友|前女朋友|前对象|前伴侣|前配偶)",
     r"(他|她|他的|她的|ta|TA)"
@@ -35,7 +33,7 @@ def load_trait_lexicon(json_path: str) -> dict:
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, dict):
-        raise ValueError("trait_lexicon.json 必须是 {trait: [regex,...]} 结构")
+        raise ValueError("trait_lexicon_chn.json 必须是 {trait: [regex,...]} 结构")
     return data
 
 def _fix_cn_pattern(p: str) -> str:
@@ -56,37 +54,22 @@ def lexicon_scores(text: str, re_traits: dict) -> dict:
 
 # ---------- Zero-shot 多标签 ----------
 LABEL_TO_DESC = {
-    "grandiosity": "shows grandiosity or superiority",
     "自大夸大": "表现出自大或优越感",
-    "fantasy_of_success_power_beauty": "has fantasies of unlimited success, power, beauty or ideal love",
     "成功权力美貌幻想": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
-    "special_unique": "believes they are special and unique",
     "特殊独一无二": "相信自己特殊而独一无二",
-    "need_for_admiration": "needs excessive admiration",
     "需要崇拜赞美": "需要过度的崇拜与赞美",
-    "entitlement": "has a sense of entitlement",
     "特权感理应拥有": "具有特权感，认为理应拥有一切",
-    "exploitative": "is interpersonally exploitative",
     "利用剥削": "在人际关系中具有剥削与利用倾向",
-    "lack_of_empathy": "lacks empathy",
-    "缺乏同理心": "缺乏同理心",
-    "envious_arrogant": "is envious or arrogant",
+    "缺乏同理心": "缺乏同理心，不关心他人的感受",
     "嫉妒傲慢": "表现出嫉妒或傲慢",
-    "love_bombing": "uses love bombing",
-    "爱情轰炸": "使用爱情轰炸策略",
-    "gaslighting": "gaslights others",
-    "煤气灯操控": "对他人实施煤气灯操控",
-    "triangulation": "uses triangulation",
-    "三角关系操纵": "通过引入第三者进行三角操纵",
-    "devaluation_discard": "devalues or discards partners",
-    "贬低抛弃": "对伴侣进行贬低或抛弃",
-    "silent_treatment": "uses silent treatment",
+    "爱情轰炸": "使用爱情、关心等轰炸策略",
+    "煤气灯操控": "对他人实施精神操控",
+    "三角关系操纵": "通过引入第三者进行三角关系操纵",
+    "否定贬低羞辱": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
+    "抛弃": "对伴侣进行抛弃",
     "冷暴力": "以冷处理/冷暴力对待他人",
-    "blame_shifting": "engages in blame shifting",
     "推卸责任": "推卸责任、甩锅他人",
-    "future_faking": "does future faking",
     "画饼式承诺": "用画饼式承诺进行欺骗",
-    "hoovering": "does hoovering",
     "回吸拽回": "通过回吸把人再次拽回关系中"
 }
 ZERO_SHOT_LABELS = list(LABEL_TO_DESC.values())
@@ -97,21 +80,21 @@ def build_zero_shot(device_id: int = 0):
         "zero-shot-classification",
         model="valhalla/distilbart-mnli-12-1",
         device=device_id,
-        tokenizer_kwargs={"truncation": True, "max_length": 384}
+        tokenizer_kwargs={"truncation": True, "max_length": 1024}
     )
 
-def zero_shot_scores(zs, text: str) -> dict:
-    if not text or len(text) < 8:
+def zero_shot_scores(zs, text: str) -> dict: # 接收一个已构建好的零样本分类 pipeline 实例 zs，以及待分析文本 text
+    if not text or len(text) < 8: # 输入校验：如果文本为空或长度小于 8，直接返回空字典，避免无意义/噪声评分。
         return {}
-    out = zs(text, ZERO_SHOT_LABELS, multi_label=True)
+    out = zs(text, ZERO_SHOT_LABELS, multi_label=True) # 使用一组候选标签 ZERO_SHOT_LABELS 做多标签分类（每个标签独立给置信度）
     scores = {}
-    for label, score in zip(out["labels"], out["scores"]):
+    for label, score in zip(out["labels"], out["scores"]): # 结果整理：out["labels"] 是与候选标签对应的描述文本列表，out["scores"] 是各自的概率/置信度
         k = DESC2KEY[label]
         scores[k] = float(score)
     return scores
 
 # ---------- 分数融合 ----------
-def fuse_scores(lex_scores: dict, zs_scores: dict, w_lex=0.4, w_zs=0.6) -> dict:
+def fuse_scores(lex_scores: dict, zs_scores: dict, w_lex=0.4, w_zs=0.6) -> dict: # lex_scores：词典/规则打分，zs_scores：零样本模型打分 dict，w_lex、w_zs：各自权重。
     keys = set(lex_scores) | set(zs_scores)
     fused = {}
     for k in keys:
@@ -129,9 +112,9 @@ def main():
         return
 
     # 锚点过滤
-    if not has_partner_anchor(text):
-        print("未检测到配偶/伴侣锚点，跳过以降低误报。")
-        return
+    # if not has_partner_anchor(text):
+    #     print("未检测到配偶/伴侣锚点，跳过以降低误报。")
+    #     return
 
     # 词典与正则
     if not os.path.exists(TRAIT_LEXICON_PATH):
@@ -155,7 +138,7 @@ def main():
 
     # 融合与阈值
     fused = fuse_scores(lex_scores, zs_scores, w_lex=0.4, w_zs=0.6)
-    picks = {k: v for k, v in fused.items() if v >= 0.45}
+    picks = {k: v for k, v in fused.items() if v >= 0.2}
 
     # 打印结果
     def sort_items(d): return sorted(((k, round(v, 3)) for k, v in d.items()), key=lambda x: -x[1])
@@ -167,7 +150,7 @@ def main():
     print("\nZero-shot top5:")
     print(sort_items(zs_scores)[:5] or "无命中")
 
-    print("\nFused traits (>=0.45):")
+    print("\nFused traits (>=0.2):") # 可以根据需要调整识别的阈值
     print(sort_items(picks) or "无")
 
 if __name__ == "__main__":
