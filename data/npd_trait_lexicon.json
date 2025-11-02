@@ -5,7 +5,7 @@
       "en": "grandiosity"
     },
     "desc": {
-      "zh": "表现出自大或优越感",
+      "zh": "表现出自大或优越感，一种自我重要性的夸大感，夸大成就和才能，期盼被认可为是优越的，却不具备与之相称的成就",
       "en": "shows grandiosity or superiority"
     },
     "patterns": {
@@ -26,7 +26,7 @@
       "en": "fantasy_of_success_power_beauty"
     },
     "desc": {
-      "zh": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
+      "zh": "沉溺于对无尽的成功、权力、才华、美貌或理想爱情的幻想",
       "en": "has fantasies of unlimited success, power, beauty or ideal love"
     },
     "patterns": {
@@ -45,7 +45,7 @@
       "en": "special_unique"
     },
     "desc": {
-      "zh": "相信自己特殊而独一无二",
+      "zh": "相信自己是特殊的，独特的和独一无二的，只有其他特殊的或地位高的人才能理解自己，自己应该只与其往来",
       "en": "believes they are special and unique"
     },
     "patterns": {
@@ -59,11 +59,11 @@
   },
   "need_for_admiration": {
     "label": {
-      "zh": "需要崇拜赞美",
+      "zh": "需要他人的崇拜和赞美",
       "en": "need_for_admiration"
     },
     "desc": {
-      "zh": "需要过度的崇拜与赞美",
+      "zh": "过于追求他人的赞美和崇拜",
       "en": "needs excessive admiration"
     },
     "patterns": {
@@ -99,7 +99,7 @@
       "en": "exploitative"
     },
     "desc": {
-      "zh": "在人际关系中具有剥削与利用倾向",
+      "zh": "在人际关系中具有剥削，利用他人以实现自己的目的",
       "en": "is interpersonally exploitative"
     },
     "patterns": {
@@ -118,7 +118,7 @@
       "en": "lack_of_empathy"
     },
     "desc": {
-      "zh": "缺乏同理心，不关心他人的感受",
+      "zh": "缺乏同理心，不关心他人的感受和需求",
       "en": "lacks empathy"
     },
     "patterns": {
@@ -130,24 +130,43 @@
       ]
     }
   },
-  "envious_arrogant": {
+  "envious": {
     "label": {
-      "zh": "嫉妒傲慢",
-      "en": "envious_arrogant"
+      "zh": "嫉妒",
+      "en": "envious"
     },
     "desc": {
-      "zh": "表现出嫉妒或傲慢",
-      "en": "is envious or arrogant"
+      "zh": "经常嫉妒别人或认为别人嫉妒自己",
+      "en": "is envious"
     },
     "patterns": {
       "zh": [
         "(?:嫉妒|羡慕|看不得别人好|别人都是运气|抢了我的风头)"
       ],
       "en": [
-        "\\b(arrogant|smug|condescending|envious|jealous)\\b"
+        "\\b(envious|jealous)\\b"
       ]
     }
   },
+  "arrogant": {
+    "label": {
+      "zh": "傲慢",
+      "en": "arrogant"
+    },
+    "desc": {
+      "zh": "展现出傲慢的行为或态度",
+      "en": "is arrogant"
+    },
+    "patterns": {
+      "zh": [
+        "(?:傲慢的|自鸣得意的|居高临下的)"
+      ],
+      "en": [
+        "\\b(arrogant|smug|condescending)\\b"
+      ]
+    }
+  },
+
   "love_bombing": {
     "label": {
       "zh": "狂热示好",

@@ -15,7 +15,7 @@ from transformers import pipeline
 
 # ---------- 配置 ----------
 DATA_DIR = "data"
-TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "partner_hints.json")
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicon.json")
 
 # re_PARTNER = [re.compile(p, re.I) for p in PARTNER_HINTS]
 # def has_partner_anchor(text: str) -> bool:
@@ -75,29 +75,29 @@ def lexicon_scores(text: str, re_traits: dict) -> dict:
     return scores
 
 # ---------- Zero-shot 多标签 ----------
-LABEL_TO_DESC = {
-    "自大夸大": "表现出自大或优越感",
-    "幻想成功权力美貌": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
-    "特殊且独一无二": "相信自己特殊而独一无二",
-    "需要崇拜赞美": "需要过度的崇拜与赞美",
-    "特权感且理所当然": "具有特权感，认为理应拥有一切",
-    "利用和剥削他人": "在人际关系中具有剥削与利用倾向",
-    "缺乏同理心": "缺乏同理心，不关心他人的感受",
-    "嫉妒傲慢": "表现出嫉妒或傲慢",
-
-    "精神操控": "对他人实施精神操控",
-    "狂热示好": "使用爱情、关心等轰炸策略",
-    "情感虐待": "在情感上虐待伴侣",
-    "挑拨离间": "通过引入第三者进行三角关系操纵",
-    "否定贬低羞辱": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
-    "抛弃": "对伴侣进行抛弃",
-    "冷暴力": "以冷处理/冷暴力对待他人",
-    "推卸责任": "推卸责任、甩锅他人",
-    "画饼式承诺": "用画饼式承诺进行欺骗",
-    "回吸拽回": "通过回吸把人再次拽回关系中"
-}
-ZERO_SHOT_LABELS = list(LABEL_TO_DESC.values())
-DESC2KEY = {v: k for k, v in LABEL_TO_DESC.items()}
+# LABEL_TO_DESC = {
+#     "自大夸大": "表现出自大或优越感",
+#     "幻想成功权力美貌": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
+#     "特殊且独一无二": "相信自己特殊而独一无二",
+#     "需要崇拜赞美": "需要过度的崇拜与赞美",
+#     "特权感且理所当然": "具有特权感，认为理应拥有一切",
+#     "利用和剥削他人": "在人际关系中具有剥削与利用倾向",
+#     "缺乏同理心": "缺乏同理心，不关心他人的感受",
+#     "嫉妒傲慢": "表现出嫉妒或傲慢",
+#
+#     "精神操控": "对他人实施精神操控",
+#     "狂热示好": "使用爱情、关心等轰炸策略",
+#     "情感虐待": "在情感上虐待伴侣",
+#     "挑拨离间": "通过引入第三者进行三角关系操纵",
+#     "否定贬低羞辱": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
+#     "抛弃": "对伴侣进行抛弃",
+#     "冷暴力": "以冷处理/冷暴力对待他人",
+#     "推卸责任": "推卸责任、甩锅他人",
+#     "画饼式承诺": "用画饼式承诺进行欺骗",
+#     "回吸拽回": "通过回吸把人再次拽回关系中"
+# }
+# ZERO_SHOT_LABELS = list(LABEL_TO_DESC.values())
+# DESC2KEY = {v: k for k, v in LABEL_TO_DESC.items()}
 
 def build_zero_shot(device_id: int = 0):
     return pipeline(
@@ -106,6 +106,31 @@ def build_zero_shot(device_id: int = 0):
         device=device_id,
         tokenizer_kwargs={"truncation": True, "max_length": 1024}
     )
+
+# 从词典文件构建零样本候选标签与映射
+def build_zero_shot_labels_from_lexicon(json_path: str):
+    data = load_trait_lexicon(json_path)
+    # 需要原始 JSON 以获取 label/desc 文本，因此重新读取原文件
+    with open(json_path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    labels = []
+    desc2key = {}
+    for k, v in raw.items():
+        if not isinstance(v, dict):
+            continue
+        # 优先使用中文描述 desc.zh；若无，则退化到 label.zh；再退到英文 desc.en/label.en
+        desc_zh = (v.get("desc") or {}).get("zh")
+        label_zh = (v.get("label") or {}).get("zh")
+        desc_en = (v.get("desc") or {}).get("en")
+        label_en = (v.get("label") or {}).get("en")
+        chosen = desc_zh or label_zh or desc_en or label_en
+        if not chosen:
+            continue
+        labels.append(chosen)
+        desc2key[chosen] = (v.get("label") or {}).get("zh") or k
+    if not labels:
+        raise ValueError("未能从 npd_trait_lexicon.json 中提取到任何候选标签/描述")
+    return labels, desc2key
 
 def zero_shot_scores(zs, text: str) -> dict: # 接收一个已构建好的零样本分类 pipeline 实例 zs，以及待分析文本 text
     if not text or len(text) < 8: # 输入校验：如果文本为空或长度小于 8，直接返回空字典，避免无意义/噪声评分。
@@ -158,6 +183,11 @@ def main():
     except Exception:
         # 兜底到 CPU
         zs = build_zero_shot(-1)
+
+    # 使用词典文件构建候选标签与映射，替代硬编码的 LABEL_TO_DESC
+    global ZERO_SHOT_LABELS, DESC2KEY
+    ZERO_SHOT_LABELS, DESC2KEY = build_zero_shot_labels_from_lexicon(TRAIT_LEXICON_PATH)
+
     zs_scores = zero_shot_scores(zs, text[:1000])
 
     # 融合与阈值
