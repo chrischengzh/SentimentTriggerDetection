@@ -21,13 +21,13 @@ REDDIT_UA = os.getenv("REDDIT_UA", "HamoAI/0.1 by u/chrischengzh")
 # 每个键代表一种典型的自恋特征（NPD Trait），
 # 每个值是对应的英文关键词 / 表达的正则匹配模式。
 DATA_DIR = "data"
-TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon_chn.json")
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicon.json")
 
 def load_trait_lexicon(json_path: str) -> dict:
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, dict):
-        raise ValueError("trait_lexicon_chn.json 必须是 {trait: [regex,...]} 结构")
+        raise ValueError("npd_trait_lexicon.json 必须是 {trait: [regex,...]} 结构")
     return data
 
 # ---------- 词典：NPD 特征关键词（从外置文件加载并编译） ----------

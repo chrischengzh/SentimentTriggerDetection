@@ -95,7 +95,7 @@ def detect_trigger(conversation):
         trigger_sentence = conversation[trigger_idx]    # 对话里触发最后情绪爆发的关键句
         print(f"\n⚠️ 触发点可能是第 {trigger_idx+1} 句: \"{trigger_sentence}\"")
 
-        candidate_labels = load_labels("trigger_labels.json", domain="family")
+        candidate_labels = load_labels("data/trigger_labels.json", domain="family")
         t1 = time.time()
         explanation = explain_analyzer(trigger_sentence, candidate_labels)
         t2 = time.time()

@@ -48,7 +48,7 @@ diff_seconds = round(t2 - t1, 2)
 print("\n抓取Reddit总耗时：", diff_seconds, "秒")
 
 # ===== 导出 CSV（简化版） =====
-csv_file = "reddit_posts.csv"
+csv_file = "training/reddit_posts.csv"
 with open(csv_file, "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=["id","title","author","score","num_comments","created_utc","link","selftext"])
     writer.writeheader()
@@ -67,7 +67,7 @@ with open(csv_file, "w", newline="", encoding="utf-8") as f:
 print(f"CSV 导出完成: {csv_file}")
 
 # ===== 导出 JSON（完整数据） =====
-json_file = "reddit_posts.json"
+json_file = "training/reddit_posts.json"
 with open(json_file, "w", encoding="utf-8") as f:
     json.dump(posts_data, f, ensure_ascii=False, indent=2)
 

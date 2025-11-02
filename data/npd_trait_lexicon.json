@@ -1,0 +1,296 @@
+{
+  "grandiosity": {
+    "label": {
+      "zh": "自大夸大",
+      "en": "grandiosity"
+    },
+    "desc": {
+      "zh": "表现出自大或优越感",
+      "en": "shows grandiosity or superiority"
+    },
+    "patterns": {
+      "zh": [
+        "(?:我(?:这么|如此)?(?:优秀|完美|无敌|卓越)|天才|精英|无与伦比|高人一等|从不犯错|绝不会错)",
+        "(?:你们都配不上我|我说了算|我天生领导|我注定成功)",
+        "没有我你就(?:完蛋|不行|什么都不是|活不下去)"
+      ],
+      "en": [
+        "\\b(grandiose|superior|perfect|flawless|never wrong)\\b",
+        "\\b(think(s)? (he|she|they) (is|are) (above|better) (everyone|others))\\b"
+      ]
+    }
+  },
+  "fantasy_of_success_power_beauty": {
+    "label": {
+      "zh": "幻想成功权力美貌",
+      "en": "fantasy_of_success_power_beauty"
+    },
+    "desc": {
+      "zh": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
+      "en": "has fantasies of unlimited success, power, beauty or ideal love"
+    },
+    "patterns": {
+      "zh": [
+        "(?:注定成功|亿万富翁|世界第一|权力巅峰|所有人都会爱我|灵魂伴侣|完美爱情|童话般的)"
+      ],
+      "en": [
+        "\\b(fantasi(e|es)|delusion(s)? of (grandeur|success|power|beauty))\\b",
+        "\\b(ideal love|soulmate fantasy)\\b"
+      ]
+    }
+  },
+  "special_unique": {
+    "label": {
+      "zh": "特殊且独一无二",
+      "en": "special_unique"
+    },
+    "desc": {
+      "zh": "相信自己特殊而独一无二",
+      "en": "believes they are special and unique"
+    },
+    "patterns": {
+      "zh": [
+        "(?:我很特殊|与众不同|只配和(?:成功|上层)的人在一起|普通人不懂我|我不需要规则)"
+      ],
+      "en": [
+        "\\b(unique|special|exceptional|too (smart|important))\\b"
+      ]
+    }
+  },
+  "need_for_admiration": {
+    "label": {
+      "zh": "需要崇拜赞美",
+      "en": "need_for_admiration"
+    },
+    "desc": {
+      "zh": "需要过度的崇拜与赞美",
+      "en": "needs excessive admiration"
+    },
+    "patterns": {
+      "zh": [
+        "(?:夸夸我|你就该赞美我|我值得被(?:崇拜|膜拜)|给我掌声|没有人像我这么棒)"
+      ],
+      "en": [
+        "\\b(admir(e|ation)|praise|constant validation|applause)\\b"
+      ]
+    }
+  },
+  "entitlement": {
+    "label": {
+      "zh": "特权感且理所当然",
+      "en": "entitlement"
+    },
+    "desc": {
+      "zh": "具有特权感，认为理应拥有一切",
+      "en": "has a sense of entitlement"
+    },
+    "patterns": {
+      "zh": [
+        "(?:我就该|我应得|规则不适用于我|给我开后门|你必须无条件满足我)"
+      ],
+      "en": [
+        "\\b(entitled|deserve(s|d)? everything|rules (don'?t|do not) apply)\\b"
+      ]
+    }
+  },
+  "exploitative": {
+    "label": {
+      "zh": "利用和剥削他人",
+      "en": "exploitative"
+    },
+    "desc": {
+      "zh": "在人际关系中具有剥削与利用倾向",
+      "en": "is interpersonally exploitative"
+    },
+    "patterns": {
+      "zh": [
+        "(?:你欠我的|记我这个人情|我帮了你这么多|不懂得感恩)",
+        "(?:拿你当工具|利用你|替我办事)"
+      ],
+      "en": [
+        "\\b(exploit(s|ed|ing)?|use(s|d)? me|manipulat(e|ive|ion))\\b"
+      ]
+    }
+  },
+  "lack_of_empathy": {
+    "label": {
+      "zh": "缺乏同理心",
+      "en": "lack_of_empathy"
+    },
+    "desc": {
+      "zh": "缺乏同理心，不关心他人的感受",
+      "en": "lacks empathy"
+    },
+    "patterns": {
+      "zh": [
+        "(?:我不在乎你的感受|你太敏感|这有什么大不了|别矫情|活该)"
+      ],
+      "en": [
+        "\\b(lack(s)? of empathy|no empathy|doesn'?t care|no remorse)\\b"
+      ]
+    }
+  },
+  "envious_arrogant": {
+    "label": {
+      "zh": "嫉妒傲慢",
+      "en": "envious_arrogant"
+    },
+    "desc": {
+      "zh": "表现出嫉妒或傲慢",
+      "en": "is envious or arrogant"
+    },
+    "patterns": {
+      "zh": [
+        "(?:嫉妒|羡慕|看不得别人好|别人都是运气|抢了我的风头)"
+      ],
+      "en": [
+        "\\b(arrogant|smug|condescending|envious|jealous)\\b"
+      ]
+    }
+  },
+  "love_bombing": {
+    "label": {
+      "zh": "狂热示好",
+      "en": "love_bombing"
+    },
+    "desc": {
+      "zh": "使用爱情、关心等轰炸策略",
+      "en": "uses love bombing"
+    },
+    "patterns": {
+      "zh": [
+        "(?:一见钟情|我离不开你|余生都给你|分分秒秒都想你|马上见父母|命中注定)"
+      ],
+      "en": [
+        "\\b(love ?bomb(ing)?|shower(ed)? me with (gifts|attention|affection))\\b"
+      ]
+    }
+  },
+  "gaslighting": {
+    "label": {
+      "zh": "精神操控",
+      "en": "gaslighting"
+    },
+    "desc": {
+      "zh": "对他人实施精神操控",
+      "en": "gaslights others"
+    },
+    "patterns": {
+      "zh": [
+        "(?:你记错了|都是你想象|你疯了吧|没有这回事|我从没这么说)"
+      ],
+      "en": [
+        "\\b(gaslight(ing|ed)?|you('?| )re crazy|made me doubt my reality)\\b"
+      ]
+    }
+  },
+  "triangulation": {
+    "label": {
+      "zh": "挑拨离间",
+      "en": "triangulation"
+    },
+    "desc": {
+      "zh": "通过引入第三者进行三角关系操纵",
+      "en": "uses triangulation"
+    },
+    "patterns": {
+      "zh": [
+        "(?:某某都说你不行|大家都觉得你有问题|我前任比你强|看看别人)"
+      ],
+      "en": [
+        "\\b(triangulat(e|ion)|compare(d)? me to (ex|others)|brought a third person)\\b"
+      ]
+    }
+  },
+  "devaluation_discard": {
+    "label": {
+      "zh": "否定贬低羞辱",
+      "en": "devaluation_discard"
+    },
+    "desc": {
+      "zh": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
+      "en": "devalues or discards partners"
+    },
+  "patterns": {
+    "zh": [
+      "(?:蠢货|废物|一无是处|没用|垃圾|滚开|走开)",
+      "(?:你不配|谁稀罕你|你算什么)"
+    ],
+    "en": [
+      "\\b(devalu(e|ation)|discard(ed)?|sudden devalue|put me down)\\b"
+    ]
+  }
+  },
+  "silent_treatment": {
+    "label": {
+      "zh": "冷暴力",
+      "en": "silent_treatment"
+    },
+    "desc": {
+      "zh": "以冷处理/冷暴力对待他人",
+      "en": "uses silent treatment"
+    },
+    "patterns": {
+      "zh": [
+        "(?:冷暴力|不理你|已读不回|拉黑你|不解释|爱答不理)"
+      ],
+      "en": [
+        "\\b(silent treatment|stonewall(ing)?|ignore(d|s|ing) me)\\b"
+      ]
+    }
+  },
+  "blame_shifting": {
+    "label": {
+      "zh": "推卸责任",
+      "en": "blame_shifting"
+    },
+    "desc": {
+      "zh": "推卸责任、甩锅他人",
+      "en": "engages in blame shifting"
+    },
+    "patterns": {
+      "zh": [
+        "(?:都是你的错|怪我干嘛|要不是你|你逼的|我只是被迫)"
+      ],
+      "en": [
+        "\\b(blame shifting|it'?s all my fault|never their fault|always blame me)\\b"
+      ]
+    }
+  },
+  "future_faking": {
+    "label": {
+      "zh": "画饼式承诺",
+      "en": "future_faking"
+    },
+    "desc": {
+      "zh": "用画饼式承诺进行欺骗",
+      "en": "does future faking"
+    },
+    "patterns": {
+      "zh": [
+        "(?:宏大叙事|画饼式承诺|虚假承诺|承诺(从未|根本)不兑现|说好的从不实现)"
+      ],
+      "en": [
+        "\\b(future faking|made promises (he|she|they) never kept)\\b"
+      ]
+    }
+  },
+  "hoovering": {
+    "label": {
+      "zh": "回吸拽回",
+      "en": "hoovering"
+    },
+    "desc": {
+      "zh": "通过回吸把人再次拽回关系中",
+      "en": "does hoovering"
+    },
+    "patterns": {
+      "zh": [
+        "(?:回吸|情感回拉|再次吸引|情绪操控拉回|重新拽回关系|再次把我吸回)"
+      ],
+      "en": [
+        "\\b(hoover(ing)?|pull(ed)? me back|suck(ed)? me back)\\b"
+      ]
+    }
+  }
+}

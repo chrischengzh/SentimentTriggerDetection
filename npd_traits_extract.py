@@ -15,26 +15,48 @@ from transformers import pipeline
 
 # ---------- 配置 ----------
 DATA_DIR = "data"
-TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "trait_lexicon_chn.json")
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "partner_hints.json")
 
-# 配偶/伴侣锚点（中英混合）
-PARTNER_HINTS = [
-    r"(我(的)?|我们(的)?|咱们(的)?|我家|我们家|咱家)\s*(丈夫|老公|先生|老伴|妻子|老婆|太太|贤内助|男女朋友|男友|女友|男朋友|女朋友|对象|伴侣|配偶|爱人|另一半)",
-    r"(前任|前夫|前妻|前男友|前女友|前男朋友|前女朋友|前对象|前伴侣|前配偶)",
-    r"(他|她|他的|她的|ta|TA)"
-]
-re_PARTNER = [re.compile(p, re.I) for p in PARTNER_HINTS]
-
-def has_partner_anchor(text: str) -> bool:
-    return any(rp.search(text) for rp in re_PARTNER)
+# re_PARTNER = [re.compile(p, re.I) for p in PARTNER_HINTS]
+# def has_partner_anchor(text: str) -> bool:
+#     return any(rp.search(text) for rp in re_PARTNER)
 
 # ---------- 词典加载与编译（对中文移除 \b） ----------
 def load_trait_lexicon(json_path: str) -> dict:
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, dict):
-        raise ValueError("trait_lexicon_chn.json 必须是 {trait: [regex,...]} 结构")
-    return data
+        raise ValueError(
+            "npd_trait_lexicon.json 必须是 {trait: {...}} 字典，且正则放在 顶层 zh 或 patterns.zh 中"
+        )
+
+    zh_only = {}
+    for k, v in data.items():
+        if not isinstance(v, dict):
+            continue
+        patterns_zh = None
+        # 1) 兼容老格式：顶层 zh 为正则数组
+        if isinstance(v.get("zh"), list):
+            patterns_zh = v["zh"]
+        # 2) 兼容新格式：patterns.zh 为正则数组
+        if patterns_zh is None:
+            patterns = v.get("patterns", {})
+            if isinstance(patterns.get("zh"), list):
+                patterns_zh = patterns["zh"]
+        # 3) 兼容另一命名：regex.zh
+        if patterns_zh is None:
+            regex_block = v.get("regex", {})
+            if isinstance(regex_block.get("zh"), list):
+                patterns_zh = regex_block["zh"]
+
+        if isinstance(patterns_zh, list) and patterns_zh:
+            zh_only[k] = patterns_zh
+
+    if not zh_only:
+        raise ValueError(
+            "未能从词典中解析到任何可用的中文正则（支持顶层 zh 或 patterns.zh 或 regex.zh）"
+        )
+    return zh_only
 
 def _fix_cn_pattern(p: str) -> str:
     if any('\u4e00' <= ch <= '\u9fff' for ch in p):
@@ -55,16 +77,18 @@ def lexicon_scores(text: str, re_traits: dict) -> dict:
 # ---------- Zero-shot 多标签 ----------
 LABEL_TO_DESC = {
     "自大夸大": "表现出自大或优越感",
-    "成功权力美貌幻想": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
-    "特殊独一无二": "相信自己特殊而独一无二",
+    "幻想成功权力美貌": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
+    "特殊且独一无二": "相信自己特殊而独一无二",
     "需要崇拜赞美": "需要过度的崇拜与赞美",
-    "特权感理应拥有": "具有特权感，认为理应拥有一切",
-    "利用剥削": "在人际关系中具有剥削与利用倾向",
+    "特权感且理所当然": "具有特权感，认为理应拥有一切",
+    "利用和剥削他人": "在人际关系中具有剥削与利用倾向",
     "缺乏同理心": "缺乏同理心，不关心他人的感受",
     "嫉妒傲慢": "表现出嫉妒或傲慢",
-    "爱情轰炸": "使用爱情、关心等轰炸策略",
-    "煤气灯操控": "对他人实施精神操控",
-    "三角关系操纵": "通过引入第三者进行三角关系操纵",
+
+    "精神操控": "对他人实施精神操控",
+    "狂热示好": "使用爱情、关心等轰炸策略",
+    "情感虐待": "在情感上虐待伴侣",
+    "挑拨离间": "通过引入第三者进行三角关系操纵",
     "否定贬低羞辱": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
     "抛弃": "对伴侣进行抛弃",
     "冷暴力": "以冷处理/冷暴力对待他人",

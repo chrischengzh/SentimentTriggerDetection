@@ -1,0 +1,13 @@
+{
+  "partner_hints": {
+    "zh": [
+      "(我(的)?|我们(的)?|咱们(的)?|我家|我们家|咱家)\\s*(丈夫|老公|先生|老伴|妻子|老婆|太太|贤内助|男女朋友|男友|女友|男朋友|女朋友|对象|伴侣|配偶|爱人|另一半)",
+      "(前任|前夫|前妻|前男友|前女友|前男朋友|前女朋友|前对象|前伴侣|前配偶)",
+      "(他|她|他的|她的|ta|TA)"
+    ],
+    "en": [
+      "\\b(my|our)\\s+(husband|wife|spouse|partner|bf|boyfriend|gf|girlfriend)\\b",
+      "\\b(ex[- ]?(husband|wife|partner|bf|boyfriend|gf|girlfriend))\\b"
+    ]
+  }
+}
