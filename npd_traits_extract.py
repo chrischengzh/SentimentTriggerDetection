@@ -16,10 +16,40 @@ from transformers import pipeline
 # ---------- 配置 ----------
 DATA_DIR = "data"
 TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicon.json")
+PARTNER_HINTS_PATH = os.path.join(DATA_DIR, "partner_hints.json")
 
-# re_PARTNER = [re.compile(p, re.I) for p in PARTNER_HINTS]
-# def has_partner_anchor(text: str) -> bool:
-#     return any(rp.search(text) for rp in re_PARTNER)
+# 由 partner_hints.json 构建配偶/伴侣锚点正则
+def _load_partner_hints(json_path: str):
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        ph = data.get("partner_hints")
+        if isinstance(ph, dict):
+            return list(ph.get("zh") or []) + list(ph.get("en") or [])
+        # 兼容顶层 zh/en 或 patterns.zh/en
+        combined = []
+        for key in ("zh", "en"):
+            v = data.get(key)
+            if isinstance(v, list):
+                combined += v
+        if combined:
+            return combined
+        patterns = data.get("patterns") or {}
+        combined = list(patterns.get("zh") or []) + list(patterns.get("en") or [])
+        if combined:
+            return combined
+    raise ValueError("partner_hints.json 格式不支持")
+
+try:
+    _partner_hints = _load_partner_hints(PARTNER_HINTS_PATH)
+except Exception:
+    _partner_hints = []
+re_PARTNER = [re.compile(p, re.I) for p in _partner_hints if isinstance(p, str) and p.strip()]
+
+def has_partner_anchor(text: str) -> bool:
+    return any(rp.search(text) for rp in re_PARTNER)
 
 # ---------- 词典加载与编译（对中文移除 \b） ----------
 def load_trait_lexicon(json_path: str) -> dict:
@@ -73,31 +103,6 @@ def lexicon_scores(text: str, re_traits: dict) -> dict:
         if hit > 0:
             scores[trait] = min(1.0, 0.2 * hit)
     return scores
-
-# ---------- Zero-shot 多标签 ----------
-# LABEL_TO_DESC = {
-#     "自大夸大": "表现出自大或优越感",
-#     "幻想成功权力美貌": "沉溺于无限成功、权力、美貌或理想爱情的幻想",
-#     "特殊且独一无二": "相信自己特殊而独一无二",
-#     "需要崇拜赞美": "需要过度的崇拜与赞美",
-#     "特权感且理所当然": "具有特权感，认为理应拥有一切",
-#     "利用和剥削他人": "在人际关系中具有剥削与利用倾向",
-#     "缺乏同理心": "缺乏同理心，不关心他人的感受",
-#     "嫉妒傲慢": "表现出嫉妒或傲慢",
-#
-#     "精神操控": "对他人实施精神操控",
-#     "狂热示好": "使用爱情、关心等轰炸策略",
-#     "情感虐待": "在情感上虐待伴侣",
-#     "挑拨离间": "通过引入第三者进行三角关系操纵",
-#     "否定贬低羞辱": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
-#     "抛弃": "对伴侣进行抛弃",
-#     "冷暴力": "以冷处理/冷暴力对待他人",
-#     "推卸责任": "推卸责任、甩锅他人",
-#     "画饼式承诺": "用画饼式承诺进行欺骗",
-#     "回吸拽回": "通过回吸把人再次拽回关系中"
-# }
-# ZERO_SHOT_LABELS = list(LABEL_TO_DESC.values())
-# DESC2KEY = {v: k for k, v in LABEL_TO_DESC.items()}
 
 def build_zero_shot(device_id: int = 0):
     return pipeline(
@@ -161,9 +166,9 @@ def main():
         return
 
     # 锚点过滤
-    # if not has_partner_anchor(text):
-    #     print("未检测到配偶/伴侣锚点，跳过以降低误报。")
-    #     return
+    if not has_partner_anchor(text):
+        print("未检测到配偶/伴侣锚点，跳过以降低误报。")
+        return
 
     # 词典与正则
     if not os.path.exists(TRAIT_LEXICON_PATH):
