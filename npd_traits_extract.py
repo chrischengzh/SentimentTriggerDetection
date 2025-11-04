@@ -11,18 +11,18 @@ import os
 import re
 import json
 import sys
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
 # ---------- 配置 ----------
 DATA_DIR = "data"
-TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicon.json")
+TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicons.json")
 PARTNER_HINTS_PATH = os.path.join(DATA_DIR, "partner_hints.json")
 
 # 由 partner_hints.json 构建配偶/伴侣锚点正则
 def _load_partner_hints(json_path: str):
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    if isinstance(data, list):
+    if isinstance(data, list):which brew
         return data
     if isinstance(data, dict):
         ph = data.get("partner_hints")
@@ -57,7 +57,7 @@ def load_trait_lexicon(json_path: str) -> dict:
         data = json.load(f)
     if not isinstance(data, dict):
         raise ValueError(
-            "npd_trait_lexicon.json 必须是 {trait: {...}} 字典，且正则放在 顶层 zh 或 patterns.zh 中"
+            "npd_trait_lexicons.json 必须是 {trait: {...}} 字典，且正则放在 顶层 zh 或 patterns.zh 中"
         )
 
     zh_only = {}
@@ -104,17 +104,24 @@ def lexicon_scores(text: str, re_traits: dict) -> dict:
             scores[trait] = min(1.0, 0.2 * hit)
     return scores
 
-def build_zero_shot(device_id: int = 0):
+def build_zero_shot(device_id: int = -1):
+    model_id = "valhalla/distilbart-mnli-12-1"
+    # model_id = "IDEA-CCNL/Erlangshen-Roberta-330M-NLI"
+    # model_id = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
+    # model_id = "joeddav/xlm-roberta-large-xnli"
+    tok = AutoTokenizer.from_pretrained(model_id, use_fast=False)  # 避免 tiktoken 转换
+    mdl = AutoModelForSequenceClassification.from_pretrained(model_id)
     return pipeline(
         "zero-shot-classification",
-        model="valhalla/distilbart-mnli-12-1",
+        model=mdl,
+        tokenizer=tok,
         device=device_id,
-        tokenizer_kwargs={"truncation": True, "max_length": 1024}
+        tokenizer_kwargs={"truncation": True, "max_length": 512}
     )
 
 # 从词典文件构建零样本候选标签与映射
 def build_zero_shot_labels_from_lexicon(json_path: str):
-    data = load_trait_lexicon(json_path)
+    # data = load_trait_lexicon(json_path)
     # 需要原始 JSON 以获取 label/desc 文本，因此重新读取原文件
     with open(json_path, "r", encoding="utf-8") as f:
         raw = json.load(f)
@@ -134,7 +141,7 @@ def build_zero_shot_labels_from_lexicon(json_path: str):
         labels.append(chosen)
         desc2key[chosen] = (v.get("label") or {}).get("zh") or k
     if not labels:
-        raise ValueError("未能从 npd_trait_lexicon.json 中提取到任何候选标签/描述")
+        raise ValueError("未能从 npd_trait_lexicons.json 中提取到任何候选标签/描述")
     return labels, desc2key
 
 def zero_shot_scores(zs, text: str) -> dict: # 接收一个已构建好的零样本分类 pipeline 实例 zs，以及待分析文本 text
@@ -166,9 +173,9 @@ def main():
         return
 
     # 锚点过滤
-    if not has_partner_anchor(text):
-        print("未检测到配偶/伴侣锚点，跳过以降低误报。")
-        return
+    # if not has_partner_anchor(text):
+    #     print("未检测到配偶/伴侣锚点，跳过以降低误报。")
+    #     return
 
     # 词典与正则
     if not os.path.exists(TRAIT_LEXICON_PATH):
@@ -179,6 +186,11 @@ def main():
 
     # 词典打分
     lex_scores = lexicon_scores(text, re_traits)
+    # 将英文 trait 键映射为中文标签用于展示
+    with open(TRAIT_LEXICON_PATH, "r", encoding="utf-8") as _f:
+        _raw_lex = json.load(_f)
+    KEY2ZH = {k: (v.get("label") or {}).get("zh", k) for k, v in _raw_lex.items() if isinstance(v, dict)}
+    lex_scores_cn = {KEY2ZH.get(k, k): v for k, v in lex_scores.items()}
 
     # Zero-shot
     # 自动设备选择（GPU优先，CPU 为 -1）
@@ -203,8 +215,8 @@ def main():
     def sort_items(d): return sorted(((k, round(v, 3)) for k, v in d.items()), key=lambda x: -x[1])
 
     print("\n输入：", text)
-    print("\nLexicon scores:")
-    print(sort_items(lex_scores) or "无命中")
+    print("\n词典匹配得分（中文标签）:")
+    print(sort_items(lex_scores_cn) or "无命中")
 
     print("\nZero-shot top5:")
     print(sort_items(zs_scores)[:5] or "无命中")

@@ -232,7 +232,7 @@
     "patterns": {
       "zh": [
         "(?:蠢货|废物|一无是处|没用|垃圾|滚开|走开)",
-        "(?:你不配|谁稀罕你|你算什么)"
+        "(?:你不配|谁稀罕你|你算什么|你什么都不算|你啥也不是)"
       ],
       "en": [
         "\\b(devalu(e|ation)|discard(ed)?|sudden devalue|put me down)\\b"
