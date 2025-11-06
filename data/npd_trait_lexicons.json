@@ -1,7 +1,7 @@
 {
   "grandiosity": {
     "label": {
-      "zh": "自大夸大",
+      "zh": "夸大自我重要",
       "en": "grandiosity"
     },
     "desc": {
@@ -22,7 +22,7 @@
   },
   "fantasy_of_success_power_beauty": {
     "label": {
-      "zh": "幻想成功权力美貌",
+      "zh": "幻想成功权力",
       "en": "fantasy_of_success_power_beauty"
     },
     "desc": {
@@ -41,7 +41,7 @@
   },
   "special_unique": {
     "label": {
-      "zh": "特殊且独一无二",
+      "zh": "自视特殊非凡",
       "en": "special_unique"
     },
     "desc": {
@@ -59,7 +59,7 @@
   },
   "need_for_admiration": {
     "label": {
-      "zh": "需要他人的崇拜和赞美",
+      "zh": "渴求崇拜赞美",
       "en": "need_for_admiration"
     },
     "desc": {
@@ -77,7 +77,7 @@
   },
   "entitlement": {
     "label": {
-      "zh": "特权感且理所当然",
+      "zh": "期待特权优待",
       "en": "entitlement"
     },
     "desc": {
@@ -95,7 +95,7 @@
   },
   "exploitative": {
     "label": {
-      "zh": "利用和剥削他人",
+      "zh": "利用剥削他人",
       "en": "exploitative"
     },
     "desc": {
@@ -114,7 +114,7 @@
   },
   "lack_of_empathy": {
     "label": {
-      "zh": "缺乏同理心",
+      "zh": "缺乏同理之心",
       "en": "lack_of_empathy"
     },
     "desc": {
@@ -132,7 +132,7 @@
   },
   "envious": {
     "label": {
-      "zh": "嫉妒",
+      "zh": "嫉妒心态强烈",
       "en": "envious"
     },
     "desc": {
@@ -150,7 +150,7 @@
   },
   "arrogant": {
     "label": {
-      "zh": "傲慢",
+      "zh": "行为态度傲慢",
       "en": "arrogant"
     },
     "desc": {
@@ -165,192 +165,6 @@
         "\\b(arrogant|smug|condescending)\\b"
       ]
     }
-  },
-  "gaslighting": {
-    "label": {
-      "zh": "精神操控",
-      "en": "gaslighting"
-    },
-    "desc": {
-      "zh": "对他人实施精神操控",
-      "en": "gaslights others"
-    },
-    "patterns": {
-      "zh": [
-        "(?:你记错了|都是你想象|你疯了吧|没有这回事|我从没这么说)"
-      ],
-      "en": [
-        "\\b(gaslight(ing|ed)?|you('?| )re crazy|made me doubt my reality)\\b"
-      ]
-    }
-  },
-  "love_bombing": {
-    "label": {
-      "zh": "狂热示好",
-      "en": "love_bombing"
-    },
-    "desc": {
-      "zh": "使用爱情、关心等轰炸策略",
-      "en": "uses love bombing"
-    },
-    "patterns": {
-      "zh": [
-        "(?:一见钟情|我离不开你|余生都给你|分分秒秒都想你|马上见父母|命中注定)"
-      ],
-      "en": [
-        "\\b(love ?bomb(ing)?|shower(ed)? me with (gifts|attention|affection))\\b"
-      ]
-    }
-  },
-  "triangulation": {
-    "label": {
-      "zh": "挑拨离间",
-      "en": "triangulation"
-    },
-    "desc": {
-      "zh": "通过引入第三者进行三角关系操纵",
-      "en": "uses triangulation"
-    },
-    "patterns": {
-      "zh": [
-        "(?:某某都说你不行|大家都觉得你有问题|我前任比你强|看看别人)"
-      ],
-      "en": [
-        "\\b(triangulat(e|ion)|compare(d)? me to (ex|others)|brought a third person)\\b"
-      ]
-    }
-  },
-  "devaluation_discard": {
-    "label": {
-      "zh": "否定贬低羞辱",
-      "en": "devaluation_discard"
-    },
-    "desc": {
-      "zh": "对伴侣进行贬低和羞辱，否定他人的价值，否认他人的努力",
-      "en": "devalues or discards partners"
-    },
-    "patterns": {
-      "zh": [
-        "(?:蠢货|废物|一无是处|没用|垃圾|滚开|走开)",
-        "(?:你不配|谁稀罕你|你算什么|你什么都不算|你啥也不是)"
-      ],
-      "en": [
-        "\\b(devalu(e|ation)|discard(ed)?|sudden devalue|put me down)\\b"
-      ]
-    }
-  },
-  "silent_treatment": {
-    "label": {
-      "zh": "冷暴力",
-      "en": "silent_treatment"
-    },
-    "desc": {
-      "zh": "以冷处理/冷暴力对待他人",
-      "en": "uses silent treatment"
-    },
-    "patterns": {
-      "zh": [
-        "(?:冷暴力|不理你|已读不回|拉黑你|不解释|爱答不理)"
-      ],
-      "en": [
-        "\\b(silent treatment|stonewall(ing)?|ignore(d|s|ing) me)\\b"
-      ]
-    }
-  },
-  "blame_shifting": {
-    "label": {
-      "zh": "推卸责任",
-      "en": "blame_shifting"
-    },
-    "desc": {
-      "zh": "推卸责任、甩锅他人",
-      "en": "engages in blame shifting"
-    },
-    "patterns": {
-      "zh": [
-        "(?:都是你的错|怪我干嘛|要不是你|你逼的|我只是被迫)"
-      ],
-      "en": [
-        "\\b(blame shifting|it'?s all my fault|never their fault|always blame me)\\b"
-      ]
-    }
-  },
-  "future_faking": {
-    "label": {
-      "zh": "画饼式承诺",
-      "en": "future_faking"
-    },
-    "desc": {
-      "zh": "用画饼式承诺进行欺骗",
-      "en": "does future faking"
-    },
-    "patterns": {
-      "zh": [
-        "(?:宏大叙事|画饼式承诺|虚假承诺|承诺(从未|根本)不兑现|说好的从不实现)"
-      ],
-      "en": [
-        "\\b(future faking|made promises (he|she|they) never kept)\\b"
-      ]
-    }
-  },
-  "hoovering": {
-    "label": {
-      "zh": "回吸拽回",
-      "en": "hoovering"
-    },
-    "desc": {
-      "zh": "通过回吸把人再次拽回关系中",
-      "en": "does hoovering"
-    },
-    "patterns": {
-      "zh": [
-        "(?:回吸|情感回拉|再次吸引|情绪操控拉回|重新拽回关系|再次把我吸回)"
-      ],
-      "en": [
-        "\\b(hoover(ing)?|pull(ed)? me back|suck(ed)? me back)\\b"
-      ]
-    }
-  },
-  "malicious_jealousy": {
-    "label": {
-      "zh": "恶意妒忌",
-      "en": "malicious_jealousy"
-    },
-    "desc": {
-      "zh": "出于控制或打压目的的恶意嫉妒与贬抑，他人的成绩或人际被故意抹黑、诋毁、阻挠",
-      "en": "malicious, controlling envy that seeks to undermine, smear, or sabotage others"
-    },
-    "patterns": {
-      "zh": [
-        "(?:看不得你(?:好|成功)|你有那点本事|都是运气|不配拥有这些|给你点颜色|拉你下马|踩你|整你|我非得让你难看)",
-        "(?:背后说坏话|抹黑你|到处抨击你|故意散布流言|挑拨你的人脉)"
-      ],
-      "en": [
-        "\\b(malicious envy|spiteful envy|jealousy with intent to harm)\\b",
-        "\\b(can't stand you (doing|being) well|you don't deserve (this|it))\\b",
-        "\\b(smear(ed|ing)? you|sabotag(e|ed|ing) you|drag you down)\\b"
-      ]
-    }
-  },
-  "incite_jealousy_love_triangle": {
-    "label": {
-      "zh": "引发嫉妒制造三角关系",
-      "en": "incite_jealousy_create_love_triangle"
-    },
-    "desc": {
-      "zh": "通过刻意勾引或炫耀第三者来刺激伴侣嫉妒、制造竞争与不安全感，从而实现操控",
-      "en": "provokes jealousy by flaunting a third party to create a love triangle and gain control"
-    },
-    "patterns": {
-      "zh": [
-        "(?:故意让你吃醋|刺激你吃醋|拿(?:前任|追求者|暧昧对象)说事|和别人暧昧给你看|公开暧昧|当面夸别人比你强)",
-        "(?:带第三者出入|刻意晒与他/她的亲密合照|说很多人在追我|你不珍惜就有人替)"
-      ],
-      "en": [
-        "\\b(incite(s|d)? jealousy|make you jealous on purpose)\\b",
-        "\\b(create(s|d)? a love triangle|brought (an|a) (ex|third person) into this)\\b",
-        "\\b(flaunt(ing)? (an ex|others)|flirt(ed|ing) in front of me|compare(s|d)? me to (ex|others))\\b"
-      ]
-    }
   }
+
 }

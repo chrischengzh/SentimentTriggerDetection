@@ -22,7 +22,7 @@ PARTNER_HINTS_PATH = os.path.join(DATA_DIR, "partner_hints.json")
 def _load_partner_hints(json_path: str):
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    if isinstance(data, list):which brew
+    if isinstance(data, list):
         return data
     if isinstance(data, dict):
         ph = data.get("partner_hints")
@@ -105,10 +105,12 @@ def lexicon_scores(text: str, re_traits: dict) -> dict:
     return scores
 
 def build_zero_shot(device_id: int = -1):
-    model_id = "valhalla/distilbart-mnli-12-1"
+    # model_id = "uer/sbert-base-chinese-nli"
+    # model_id = "valhalla/distilbart-mnli-12-1"
     # model_id = "IDEA-CCNL/Erlangshen-Roberta-330M-NLI"
-    # model_id = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
     # model_id = "joeddav/xlm-roberta-large-xnli"
+    model_id = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
+
     tok = AutoTokenizer.from_pretrained(model_id, use_fast=False)  # 避免 tiktoken 转换
     mdl = AutoModelForSequenceClassification.from_pretrained(model_id)
     return pipeline(
