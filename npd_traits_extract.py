@@ -3,7 +3,7 @@
 单句 NPD 特征检测（词典+零样本+配偶锚点过滤）
 - 输入一条文本
 - 如命中“配偶/伴侣”锚点才进行检测
-- 词典规则打分 + 零样本打分 → 融合 → 打印结果
+- 词典规则打分 + 零样本打分（特征+关系操控）→ 融合 → 打印结果
 依赖：transformers、pandas(无硬依赖，仅为一致性可不装)
 """
 
@@ -16,6 +16,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipe
 # ---------- 配置 ----------
 DATA_DIR = "data"
 TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicons.json")
+MANIPULAATION_LEXICON_PATH = os.path.join(DATA_DIR, "npd_manipulation_lexicons.json")
 PARTNER_HINTS_PATH = os.path.join(DATA_DIR, "partner_hints.json")
 
 # 由 partner_hints.json 构建配偶/伴侣锚点正则
@@ -121,10 +122,8 @@ def build_zero_shot(device_id: int = -1):
         tokenizer_kwargs={"truncation": True, "max_length": 512}
     )
 
-# 从词典文件构建零样本候选标签与映射
+# 从词典文件构建零样本候选标签与映射（特征）
 def build_zero_shot_labels_from_lexicon(json_path: str):
-    # data = load_trait_lexicon(json_path)
-    # 需要原始 JSON 以获取 label/desc 文本，因此重新读取原文件
     with open(json_path, "r", encoding="utf-8") as f:
         raw = json.load(f)
     labels = []
@@ -132,7 +131,6 @@ def build_zero_shot_labels_from_lexicon(json_path: str):
     for k, v in raw.items():
         if not isinstance(v, dict):
             continue
-        # 优先使用中文描述 desc.zh；若无，则退化到 label.zh；再退到英文 desc.en/label.en
         desc_zh = (v.get("desc") or {}).get("zh")
         label_zh = (v.get("label") or {}).get("zh")
         desc_en = (v.get("desc") or {}).get("en")
@@ -146,22 +144,76 @@ def build_zero_shot_labels_from_lexicon(json_path: str):
         raise ValueError("未能从 npd_trait_lexicons.json 中提取到任何候选标签/描述")
     return labels, desc2key
 
-def zero_shot_scores(zs, text: str) -> dict: # 接收一个已构建好的零样本分类 pipeline 实例 zs，以及待分析文本 text
-    if not text or len(text) < 8: # 输入校验：如果文本为空或长度小于 8，直接返回空字典，避免无意义/噪声评分。
+# 从操控词典文件构建零样本候选标签与映射（关系操控）
+def build_zero_shot_labels_from_manip_lexicon(json_path: str):
+    with open(json_path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    labels = []
+    desc2key = {}
+    for k, v in raw.items():
+        if not isinstance(v, dict):
+            continue
+        desc_zh = (v.get("desc") or {}).get("zh")
+        label_zh = (v.get("label") or {}).get("zh")
+        desc_en = (v.get("desc") or {}).get("en")
+        label_en = (v.get("label") or {}).get("en")
+        chosen = desc_zh or label_zh or desc_en or label_en
+        if not chosen:
+            continue
+        labels.append(chosen)
+        desc2key[chosen] = (v.get("label") or {}).get("zh") or k
+    if not labels:
+        raise ValueError("未能从 npd_manipulation_lexicons.json 中提取到任何候选标签/描述")
+    return labels, desc2key
+
+# 构建 英文键 -> 中文显示名 的映射
+def build_key2zh_map(json_path: str) -> dict:
+    with open(json_path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    key2zh = {}
+    for k, v in raw.items():
+        if isinstance(v, dict):
+            key2zh[k] = (v.get("label") or {}).get("zh", k)
+    return key2zh
+
+def zero_shot_scores(zs, text: str) -> dict:
+    # 特征：使用 ZERO_SHOT_LABELS（traits）
+    if not text or len(text) < 8:
         return {}
-    out = zs(text, ZERO_SHOT_LABELS, multi_label=True) # 使用一组候选标签 ZERO_SHOT_LABELS 做多标签分类（每个标签独立给置信度）
+    out = zs(text, ZERO_SHOT_LABELS, multi_label=True)
     scores = {}
-    for label, score in zip(out["labels"], out["scores"]): # 结果整理：out["labels"] 是与候选标签对应的描述文本列表，out["scores"] 是各自的概率/置信度
+    for label, score in zip(out["labels"], out["scores"]):
         k = DESC2KEY[label]
         scores[k] = float(score)
     return scores
 
+def zero_shot_scores_manip(zs, text: str) -> dict:
+    # 关系操控：使用 ZERO_SHOT_LABELS_MANIP
+    if not text or len(text) < 8:
+        return {}
+    out = zs(text, ZERO_SHOT_LABELS_MANIP, multi_label=True)
+    scores = {}
+    for label, score in zip(out["labels"], out["scores"]):
+        k = DESC2KEY_MANIP[label]
+        scores[k] = float(score)
+    return scores
+
 # ---------- 分数融合 ----------
-def fuse_scores(lex_scores: dict, zs_scores: dict, w_lex=0.4, w_zs=0.6) -> dict: # lex_scores：词典/规则打分，zs_scores：零样本模型打分 dict，w_lex、w_zs：各自权重。
-    keys = set(lex_scores) | set(zs_scores)
+def fuse_scores(lex_scores: dict, zs_scores_traits: dict, zs_scores_manip: dict, w_lex=0.35, w_zs_traits=0.4, w_zs_manip=0.25) -> dict:
+    """
+    将三路分数融合：
+    - 词典（特征）lex_scores
+    - 零样本（特征）zs_scores_traits
+    - 零样本（关系操控）zs_scores_manip
+    """
+    keys = set(lex_scores) | set(zs_scores_traits) | set(zs_scores_manip)
     fused = {}
     for k in keys:
-        fused[k] = w_lex * lex_scores.get(k, 0.0) + w_zs * zs_scores.get(k, 0.0)
+        fused[k] = (
+            w_lex * lex_scores.get(k, 0.0)
+            + w_zs_traits * zs_scores_traits.get(k, 0.0)
+            + w_zs_manip * zs_scores_manip.get(k, 0.0)
+        )
     return fused
 
 def main():
@@ -174,57 +226,73 @@ def main():
         print("空输入，退出。")
         return
 
-    # 锚点过滤
+    # 锚点过滤（如需生效，取消注释）
     # if not has_partner_anchor(text):
     #     print("未检测到配偶/伴侣锚点，跳过以降低误报。")
     #     return
 
-    # 词典与正则
+    # 词典与正则（特征）
     if not os.path.exists(TRAIT_LEXICON_PATH):
         print(f"找不到词典文件: {TRAIT_LEXICON_PATH}")
         sys.exit(1)
-    lexicon = load_trait_lexicon(TRAIT_LEXICON_PATH)
-    re_traits = build_regexes(lexicon)
+    lexicon_traits = load_trait_lexicon(TRAIT_LEXICON_PATH)
+    re_traits = build_regexes(lexicon_traits)
 
-    # 词典打分
+    # 词典打分（特征）
     lex_scores = lexicon_scores(text, re_traits)
-    # 将英文 trait 键映射为中文标签用于展示
-    with open(TRAIT_LEXICON_PATH, "r", encoding="utf-8") as _f:
-        _raw_lex = json.load(_f)
-    KEY2ZH = {k: (v.get("label") or {}).get("zh", k) for k, v in _raw_lex.items() if isinstance(v, dict)}
-    lex_scores_cn = {KEY2ZH.get(k, k): v for k, v in lex_scores.items()}
+
+    # 显示名映射（特征、操控）
+    KEY2ZH_TRAIT = build_key2zh_map(TRAIT_LEXICON_PATH)
+    KEY2ZH_MANIP = build_key2zh_map(MANIPULAATION_LEXICON_PATH)
+
+    # 将词典分数映射为中文显示
+    lex_scores_cn = {KEY2ZH_TRAIT.get(k, k): v for k, v in lex_scores.items()}
 
     # Zero-shot
-    # 自动设备选择（GPU优先，CPU 为 -1）
     device_id = 0 if os.getenv("HF_DEVICE", "auto") != "cpu" else -1
     try:
         zs = build_zero_shot(device_id)
     except Exception:
-        # 兜底到 CPU
         zs = build_zero_shot(-1)
 
-    # 使用词典文件构建候选标签与映射，替代硬编码的 LABEL_TO_DESC
+    # 构建零样本候选（特征）
     global ZERO_SHOT_LABELS, DESC2KEY
     ZERO_SHOT_LABELS, DESC2KEY = build_zero_shot_labels_from_lexicon(TRAIT_LEXICON_PATH)
+    zs_scores_traits = zero_shot_scores(zs, text[:1000])
 
-    zs_scores = zero_shot_scores(zs, text[:1000])
+    # 构建零样本候选（关系操控）
+    if not os.path.exists(MANIPULAATION_LEXICON_PATH):
+        print(f"找不到操控词典文件: {MANIPULAATION_LEXICON_PATH}")
+        sys.exit(1)
+    global ZERO_SHOT_LABELS_MANIP, DESC2KEY_MANIP
+    ZERO_SHOT_LABELS_MANIP, DESC2KEY_MANIP = build_zero_shot_labels_from_manip_lexicon(MANIPULAATION_LEXICON_PATH)
+    zs_scores_manip = zero_shot_scores_manip(zs, text[:1000])
 
-    # 融合与阈值
-    fused = fuse_scores(lex_scores, zs_scores, w_lex=0.4, w_zs=0.6)
+    # 融合与阈值（统一考虑）
+    fused = fuse_scores(lex_scores, zs_scores_traits, zs_scores_manip, w_lex=0.35, w_zs_traits=0.4, w_zs_manip=0.25)
     picks = {k: v for k, v in fused.items() if v >= 0.2}
 
     # 打印结果
     def sort_items(d): return sorted(((k, round(v, 3)) for k, v in d.items()), key=lambda x: -x[1])
 
     print("\n输入：", text)
-    print("\n词典匹配得分（中文标签）:")
+
+    print("\n词典匹配得分（中文标签，特征）:")
     print(sort_items(lex_scores_cn) or "无命中")
 
-    print("\nZero-shot top5:")
-    print(sort_items(zs_scores)[:5] or "无命中")
+    print("\nZero-shot top 3（人格特征）:")
+    print(sort_items(zs_scores_traits)[:3] or "无命中")
 
-    print("\nFused traits (>=0.2):") # 可以根据需要调整识别的阈值
-    print(sort_items(picks) or "无")
+    print("\nZero-shot top 3（关系操控）:")
+    print(sort_items(zs_scores_manip)[:3] or "无命中")
+
+    # 最终融合结果中文显示（优先显示特征词典中的中文名，其次操控词典）
+    def to_cn_key(k: str) -> str:
+        return KEY2ZH_TRAIT.get(k) or KEY2ZH_MANIP.get(k) or k
+
+    picks_cn = {to_cn_key(k): v for k, v in picks.items()}
+    print("\nFused (traits + manipulation, >=0.2):")
+    print(sort_items(picks_cn) or "无")
 
 if __name__ == "__main__":
     main()
