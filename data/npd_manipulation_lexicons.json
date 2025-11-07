@@ -55,7 +55,7 @@
   },
   "devaluation_discard": {
     "label": {
-      "zh": "否定贬低羞辱",
+      "zh": "否定贬低",
       "en": "devaluation_discard"
     },
     "desc": {
@@ -110,7 +110,7 @@
   },
   "future_faking": {
     "label": {
-      "zh": "画饼式承诺",
+      "zh": "画饼承诺",
       "en": "future_faking"
     },
     "desc": {
@@ -128,7 +128,7 @@
   },
   "hoovering": {
     "label": {
-      "zh": "回吸拽回",
+      "zh": "拽回关系",
       "en": "hoovering"
     },
     "desc": {
@@ -146,7 +146,7 @@
   },
   "malicious_jealousy": {
     "label": {
-      "zh": "恶意妒忌",
+      "zh": "抹黑诋毁",
       "en": "malicious_jealousy"
     },
     "desc": {
@@ -167,7 +167,7 @@
   },
   "incite_jealousy_love_triangle": {
     "label": {
-      "zh": "引发嫉妒制造三角关系",
+      "zh": "挑拨嫉妒",
       "en": "incite_jealousy_create_love_triangle"
     },
     "desc": {
