@@ -7,16 +7,36 @@ from transformers import pipeline
 import json
 
 # ---------- 配置 ----------
-SUBREDDIT = "NPD" # "NarcissisticSpouses"
-POST_LIMIT = 5  # 抓取帖子数
+SUBREDDIT = "NPD" # "Reddit r/NPD"
+POST_LIMIT = 100  # 抓取帖子数
 MAX_COMMENTS = 0    # 评论上限（总量控制）
 POST_MAX_LENGTH = 2048 # build_zero_shot的tokenizer的max_length
 DATA_DIR = "data"
 TRAIN_DIR = "training"
-OUT_REDDIT_POSTS_NPD_CSV = os.path.join(TRAIN_DIR, "reddit_posts_comments_npd.csv")
 TRAIT_LEXICON_PATH = os.path.join(DATA_DIR, "npd_trait_lexicons.json")
 PARTNER_HINTS_PATH = os.path.join(DATA_DIR, "partner_hints.json")
 MANIPULAATION_LEXICON_PATH = os.path.join(DATA_DIR, "npd_manipulation_lexicons.json")
+TRAIT_THRESHOLD = 0.2  # 对 traits 应用阈值
+MANIPULATION_THRESHOLD = 0.2 # 对 manipulations 应用阈值
+
+# 根据 SUBREDDIT 和 POST_LIMIT 动态生成输出文件名
+def _slug(s: str) -> str:
+    return "".join(ch if ch.isalnum() or ch in ("-", "_") else "_" for ch in str(s)).strip("_") or "all"
+
+try:
+    SUBREDDIT_SLUG = _slug(SUBREDDIT)  # 假定已有 SUBREDDIT 变量
+except NameError:
+    SUBREDDIT_SLUG = "all"
+
+try:
+    POST_LIMIT_VAL = int(POST_LIMIT)   # 假定已有 POST_LIMIT 变量
+except Exception:
+    POST_LIMIT_VAL = 0
+
+OUT_REDDIT_POSTS_NPD_CSV = os.path.join(
+    TRAIN_DIR,
+    f"reddit_posts_comments_{SUBREDDIT_SLUG}_{POST_LIMIT_VAL}.csv"
+)
 
 # 建议用环境变量管理密钥
 REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "Fyrbj-NlMGINKdcBH6Tdww")
@@ -231,8 +251,14 @@ def extract_traits(df: pd.DataFrame, zs):
         # 融合（保持原有两路融合逻辑）
         fused = fuse_scores(lex, zs_scores_traits)
 
+        # 阈值过滤 traits
+        fused = {k: v for k, v in fused.items() if v >= TRAIT_THRESHOLD}
+
         # manipulations zero-shot（输出英文键）
         manip_scores = zero_shot_scores_manip(zs, text)
+
+        # 阈值过滤 manipulations
+        manip_scores = {k: v for k, v in manip_scores.items() if v >= MANIPULATION_THRESHOLD}
 
         out_rows.append({
             "kind": r["kind"],
