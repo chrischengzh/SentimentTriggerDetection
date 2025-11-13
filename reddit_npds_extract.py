@@ -8,7 +8,7 @@ import json
 
 # ---------- 配置 ----------
 SUBREDDIT = "NPD" # "Reddit r/NPD"
-POST_LIMIT = 100  # 抓取帖子数
+POST_LIMIT = 10  # 抓取帖子数
 MAX_COMMENTS = 0    # 评论上限（总量控制）
 POST_MAX_LENGTH = 2048 # build_zero_shot的tokenizer的max_length
 DATA_DIR = "data"
