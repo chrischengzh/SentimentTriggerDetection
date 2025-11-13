@@ -280,19 +280,19 @@ def main():
     print("\n词典匹配得分（中文标签，特征）:")
     print(sort_items(lex_scores_cn) or "无命中")
 
-    print("\nZero-shot top 3（人格特征）:")
+    print("\nTop 3 人格特征:")
     print(sort_items(zs_scores_traits)[:3] or "无命中")
 
-    print("\nZero-shot top 3（关系操控）:")
+    print("\nTop 3 关系操控:")
     print(sort_items(zs_scores_manip)[:3] or "无命中")
 
     # 最终融合结果中文显示（优先显示特征词典中的中文名，其次操控词典）
-    def to_cn_key(k: str) -> str:
-        return KEY2ZH_TRAIT.get(k) or KEY2ZH_MANIP.get(k) or k
-
-    picks_cn = {to_cn_key(k): v for k, v in picks.items()}
-    print("\nFused (traits + manipulation, >=0.2):")
-    print(sort_items(picks_cn) or "无")
+    # def to_cn_key(k: str) -> str:
+    #     return KEY2ZH_TRAIT.get(k) or KEY2ZH_MANIP.get(k) or k
+    #
+    # picks_cn = {to_cn_key(k): v for k, v in picks.items()}
+    # print("\nFused (traits + manipulation, >=0.2):")
+    # print(sort_items(picks_cn) or "无")
 
 if __name__ == "__main__":
     main()

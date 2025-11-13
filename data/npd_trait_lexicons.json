@@ -1,11 +1,11 @@
 {
   "grandiosity": {
     "label": {
-      "zh": "夸大自我重要",
+      "zh": "自吹自擂",
       "en": "grandiosity"
     },
     "desc": {
-      "zh": "表现出自大或优越感，一种自我重要性的夸大感，夸大成就和才能，期盼被认可为是优越的，却不具备与之相称的成就",
+      "zh": "表现出自大、自我膨胀或优越感，一种自我重要性的夸大感，夸大成就和才能，期盼被认可为是优越的，却不具备与之相称的成就。",
       "en": "shows grandiosity or superiority"
     },
     "patterns": {
@@ -22,11 +22,11 @@
   },
   "fantasy_of_success_power_beauty": {
     "label": {
-      "zh": "幻想成功权力",
+      "zh": "沉溺幻想",
       "en": "fantasy_of_success_power_beauty"
     },
     "desc": {
-      "zh": "沉溺于对无尽的成功、权力、才华、美貌或理想爱情的幻想",
+      "zh": "沉溺于对无尽的成功、权力、才华、美貌或理想爱情的幻想，追求不切实际的理想成功。\n",
       "en": "has fantasies of unlimited success, power, beauty or ideal love"
     },
     "patterns": {
@@ -41,11 +41,11 @@
   },
   "special_unique": {
     "label": {
-      "zh": "自视特殊非凡",
+      "zh": "自命不凡",
       "en": "special_unique"
     },
     "desc": {
-      "zh": "相信自己是特殊的，独特的和独一无二的，只有其他特殊的或地位高的人才能理解自己，自己应该只与其往来",
+      "zh": "强调自我中心，只认为自己重要，轻视他人。相信自己是特殊的，独特的和独一无二的，只有其他特殊的或地位高的人才能理解自己，自己应该只与其往来",
       "en": "believes they are special and unique"
     },
     "patterns": {
@@ -59,11 +59,11 @@
   },
   "need_for_admiration": {
     "label": {
-      "zh": "渴求崇拜赞美",
+      "zh": "沽名钓誉",
       "en": "need_for_admiration"
     },
     "desc": {
-      "zh": "过于追求他人的赞美和崇拜",
+      "zh": "过于追求他人的赞美和崇拜，以他人仰慕为心理满足。",
       "en": "needs excessive admiration"
     },
     "patterns": {
@@ -77,11 +77,11 @@
   },
   "entitlement": {
     "label": {
-      "zh": "期待特权优待",
+      "zh": "理所当然",
       "en": "entitlement"
     },
     "desc": {
-      "zh": "具有特权感，认为理应拥有一切",
+      "zh": "具有特权感，认为理应拥有一切；认为一切应由他人迎合、无条件满足自己。",
       "en": "has a sense of entitlement"
     },
     "patterns": {
@@ -95,11 +95,11 @@
   },
   "exploitative": {
     "label": {
-      "zh": "利用剥削他人",
+      "zh": "利用他人",
       "en": "exploitative"
     },
     "desc": {
-      "zh": "在人际关系中具有剥削，利用他人以实现自己的目的",
+      "zh": "在人际关系中具有剥削，利用和牺牲他人以实现自己的目的。",
       "en": "is interpersonally exploitative"
     },
     "patterns": {
@@ -114,11 +114,11 @@
   },
   "lack_of_empathy": {
     "label": {
-      "zh": "缺乏同理之心",
+      "zh": "冷若冰霜",
       "en": "lack_of_empathy"
     },
     "desc": {
-      "zh": "缺乏同理心，不关心他人的感受和需求",
+      "zh": "缺乏同理心和共情能力，不关心他人的感受和需求，对他人情绪冷漠无感。",
       "en": "lacks empathy"
     },
     "patterns": {
@@ -132,11 +132,11 @@
   },
   "envious": {
     "label": {
-      "zh": "嫉妒心态强烈",
+      "zh": "嫉贤妒能",
       "en": "envious"
     },
     "desc": {
-      "zh": "经常嫉妒别人或认为别人嫉妒自己",
+      "zh": "见不得他人优秀，常通过贬低或否定他人来平衡心理，经常嫉妒别人或认为别人嫉妒自己。\n",
       "en": "is envious"
     },
     "patterns": {
@@ -150,11 +150,11 @@
   },
   "arrogant": {
     "label": {
-      "zh": "行为态度傲慢",
+      "zh": "盛气凌人",
       "en": "arrogant"
     },
     "desc": {
-      "zh": "展现出傲慢的行为或态度",
+      "zh": "展现出傲慢的行为或态度，以傲慢姿态对待他人，表现轻蔑与支配欲。",
       "en": "is arrogant"
     },
     "patterns": {
