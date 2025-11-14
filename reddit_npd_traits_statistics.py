@@ -23,8 +23,8 @@ from typing import Any, List, Tuple, Optional
 
 
 # ---------- 配置 ----------
-SUBREDDIT = "NPD"       # "Reddit NPD"
-POST_LIMIT = 100         # 抓取帖子数
+SUBREDDIT = "NarcissisticParents"       # "Reddit NPD"
+POST_LIMIT = 1000         # 抓取帖子数
 TRAIN_DIR = "training"
 
 

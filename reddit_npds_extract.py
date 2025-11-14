@@ -7,8 +7,8 @@ from transformers import pipeline
 import json
 
 # ---------- 配置 ----------
-SUBREDDIT = "NPD" # "Reddit r/NPD"
-POST_LIMIT = 100  # 抓取帖子数
+SUBREDDIT = "narcissisticparents" # "Reddit r/"
+POST_LIMIT = 1000  # 抓取帖子数
 MAX_COMMENTS = 0    # 评论上限（总量控制）
 POST_MAX_LENGTH = 2048 # build_zero_shot的tokenizer的max_length
 DATA_DIR = "data"
@@ -92,14 +92,12 @@ def lexicon_scores(text: str) -> dict:
             scores[trait] = min(1.0, 0.2 * hit)  # 简单打分：每命中一条+0.2（可调）
     return scores
 
+# 做基础清洗：去掉 URL、markdown、重复空白、过短内容
 def clean_text(s: str) -> str:
     s = s or ""
     s = re.sub(r"http\S+|\[.*?\]\(.*?\)", " ", s)  # 链接/markdown
     s = re.sub(r"\s+", " ", s).strip()
     return s
-
-# ---------- Zero-shot 多标签 ----------
-# 移除 LABEL_TO_DESC 相关定义
 
 def build_zero_shot():
     # 英文社区 → 英文零样本模型
