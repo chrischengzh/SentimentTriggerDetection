@@ -21,7 +21,6 @@ import json
 from pathlib import Path
 from typing import Any, List, Tuple, Optional
 
-
 # ---------- 配置 ----------
 SUBREDDIT = "NarcissisticParents"       # "Reddit NPD"
 POST_LIMIT = 1000         # 抓取帖子数
