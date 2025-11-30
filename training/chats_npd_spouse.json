@@ -1,0 +1,466 @@
+[
+  {
+    "turn": 1,
+    "speaker": "user",
+    "text": "我真的快撑不住了。昨天我们吵架后，他突然就消失了，我不知道我做错了什么。",
+    "npd_traits_detected": [
+      "lack_of_empathy"
+    ],
+    "manipulation_detected": [
+      "silent_treatment"
+    ],
+    "victim_state": "自责、困惑、情绪崩溃",
+    "emotion": "fear, sadness, confusion",
+    "needs": "clarity, emotional safety"
+  },
+  {
+    "turn": 2,
+    "speaker": "hamo",
+    "text": "听起来你经历了非常痛苦的一晚……你还记得争吵是从哪里开始的吗？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "seeking validation",
+    "emotion": "supportive",
+    "needs": "empathy"
+  },
+  {
+    "turn": 3,
+    "speaker": "user",
+    "text": "我只是问他能不能早点回家……他说我在控制他，就摔门走了。",
+    "npd_traits_detected": [
+      "entitlement",
+      "lack_of_empathy"
+    ],
+    "manipulation_detected": [
+      "blame_shifting",
+      "devaluation"
+    ],
+    "victim_state": "confused, self-blaming",
+    "emotion": "hurt",
+    "needs": "reality checking"
+  },
+  {
+    "turn": 4,
+    "speaker": "hamo",
+    "text": "你正常需求被说成威胁……你当下的感觉是什么？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "grounding",
+    "emotion": "calm",
+    "needs": "clarification"
+  },
+  {
+    "turn": 5,
+    "speaker": "user",
+    "text": "我觉得很羞愧，好像我真的做错了。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "gaslighting_effect"
+    ],
+    "victim_state": "shame, internalized blame",
+    "emotion": "shame",
+    "needs": "validation"
+  },
+  {
+    "turn": 6,
+    "speaker": "hamo",
+    "text": "你的反应完全合理……不是你的错。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "soothing",
+    "emotion": "warm",
+    "needs": "empathy"
+  },
+  {
+    "turn": 7,
+    "speaker": "user",
+    "text": "他发消息说：你就是喜欢破坏气氛。",
+    "npd_traits_detected": [
+      "arrogant"
+    ],
+    "manipulation_detected": [
+      "blame_shifting",
+      "devaluation"
+    ],
+    "victim_state": "distress",
+    "emotion": "hurt",
+    "needs": "emotional containment"
+  },
+  {
+    "turn": 8,
+    "speaker": "hamo",
+    "text": "那句话听起来像把责任推回给你……你如何理解？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "processing",
+    "emotion": "grounding",
+    "needs": "contextualization"
+  },
+  {
+    "turn": 9,
+    "speaker": "user",
+    "text": "是不是我真的太敏感？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "gaslighting_effect"
+    ],
+    "victim_state": "self-doubt",
+    "emotion": "anxiety",
+    "needs": "reality anchor"
+  },
+  {
+    "turn": 10,
+    "speaker": "hamo",
+    "text": "你一点也不敏感……你的感受很正常。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "reassurance",
+    "emotion": "supportive",
+    "needs": "validation"
+  },
+  {
+    "turn": 11,
+    "speaker": "user",
+    "text": "今天他突然又很温柔，说昨晚是因为压力太大。",
+    "npd_traits_detected": [
+      "entitlement"
+    ],
+    "manipulation_detected": [
+      "hoovering",
+      "intermittent_reinforcement"
+    ],
+    "victim_state": "confused attachment",
+    "emotion": "uncertainty",
+    "needs": "pattern recognition"
+  },
+  {
+    "turn": 12,
+    "speaker": "hamo",
+    "text": "冷热循环会让人很迷失……哪部分最让你难受？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "exploring pain",
+    "emotion": "steady",
+    "needs": "reflection"
+  },
+  {
+    "turn": 13,
+    "speaker": "user",
+    "text": "他温柔时我觉得是我误会他了。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "intermittent_reinforcement"
+    ],
+    "victim_state": "cognitive confusion",
+    "emotion": "sadness",
+    "needs": "clarity"
+  },
+  {
+    "turn": 14,
+    "speaker": "hamo",
+    "text": "这是常见反应……你愿意说说哪些时刻最让你不安？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "safe exploration",
+    "emotion": "calm",
+    "needs": "emotional mapping"
+  },
+  {
+    "turn": 15,
+    "speaker": "user",
+    "text": "只要我表达感受，他就说我永远不会满足。",
+    "npd_traits_detected": [
+      "lack_of_empathy",
+      "arrogant"
+    ],
+    "manipulation_detected": [
+      "devaluation",
+      "gaslighting"
+    ],
+    "victim_state": "silenced",
+    "emotion": "hurt",
+    "needs": "validation"
+  },
+  {
+    "turn": 16,
+    "speaker": "hamo",
+    "text": "你的感受被当成负担……这确实会让人不敢表达。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "supported",
+    "emotion": "warm",
+    "needs": "acknowledgement"
+  },
+  {
+    "turn": 17,
+    "speaker": "user",
+    "text": "我后来都不敢讲话，他一冷脸我就害怕。",
+    "npd_traits_detected": [
+      "lack_of_empathy"
+    ],
+    "manipulation_detected": [
+      "silent_treatment"
+    ],
+    "victim_state": "fear",
+    "emotion": "anxiety",
+    "needs": "emotional safety"
+  },
+  {
+    "turn": 18,
+    "speaker": "hamo",
+    "text": "你的身体在保护你……不是你害怕，而是你受过伤。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "reframing",
+    "emotion": "gentle",
+    "needs": "healing"
+  },
+  {
+    "turn": 19,
+    "speaker": "user",
+    "text": "他说我真麻烦。",
+    "npd_traits_detected": [
+      "arrogant",
+      "lack_of_empathy"
+    ],
+    "manipulation_detected": [
+      "devaluation"
+    ],
+    "victim_state": "shame",
+    "emotion": "hurt",
+    "needs": "self-worth repair"
+  },
+  {
+    "turn": 20,
+    "speaker": "hamo",
+    "text": "那句话很伤人……你当时感觉心凉吗？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "processing hurt",
+    "emotion": "steady",
+    "needs": "naming feelings"
+  },
+  {
+    "turn": 21,
+    "speaker": "user",
+    "text": "有一次我真的受不了了，我哭着跟他说我很难过，他却说：你真麻烦。",
+    "npd_traits_detected": [
+      "lack_of_empathy",
+      "arrogant"
+    ],
+    "manipulation_detected": [
+      "devaluation"
+    ],
+    "victim_state": "emotionally crushed",
+    "emotion": "sadness, shame",
+    "needs": "being heard, comfort"
+  },
+  {
+    "turn": 22,
+    "speaker": "hamo",
+    "text": "听到这句话一定很刺痛。你在表达脆弱，而他用轻蔑回应，这是非常伤人的。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "validated",
+    "emotion": "warm empathy",
+    "needs": "acknowledgement, safety"
+  },
+  {
+    "turn": 23,
+    "speaker": "user",
+    "text": "那一瞬间我甚至觉得自己是个负担。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "internalized_devaluation"
+    ],
+    "victim_state": "self-blame",
+    "emotion": "sadness, despair",
+    "needs": "reassurance"
+  },
+  {
+    "turn": 24,
+    "speaker": "hamo",
+    "text": "你不是负担。你是在关系里反复被暗示‘你的感受不重要’。那是伤害造成的信念，不是事实。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "reframing begins",
+    "emotion": "supportive",
+    "needs": "identity repair"
+  },
+  {
+    "turn": 25,
+    "speaker": "user",
+    "text": "可是他也有很好的一面，他偶尔对我特别温柔，说什么‘我只有你’。",
+    "npd_traits_detected": [
+      "need_for_admiration"
+    ],
+    "manipulation_detected": [
+      "hoovering",
+      "intermittent_reinforcement",
+      "love_bombing"
+    ],
+    "victim_state": "attachment conflict",
+    "emotion": "longing, confusion",
+    "needs": "stability, consistency"
+  },
+  {
+    "turn": 26,
+    "speaker": "hamo",
+    "text": "那些温柔的时刻并不能代表稳定的爱，而像是间歇性的强化，让你更难离开痛苦的循环。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "gaining clarity",
+    "emotion": "gentle explanation",
+    "needs": "pattern recognition"
+  },
+  {
+    "turn": 27,
+    "speaker": "user",
+    "text": "有时我觉得我爱的不是他，而是他偶尔表现出来的那个版本。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "intermittent_reinforcement"
+    ],
+    "victim_state": "identity confusion",
+    "emotion": "sad insight",
+    "needs": "validation, clarity"
+  },
+  {
+    "turn": 28,
+    "speaker": "hamo",
+    "text": "你爱的是那些片段里出现的温柔，是你内心渴望被看见、被珍惜的部分。那是你在爱，不是他的稳定行为在爱。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "deep reflection",
+    "emotion": "warm, grounding",
+    "needs": "self-compassion"
+  },
+  {
+    "turn": 29,
+    "speaker": "user",
+    "text": "那我是不是很傻？明明知道他对我不好，我还是放不开。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "trauma_bond_effect"
+    ],
+    "victim_state": "self-judgment",
+    "emotion": "shame, frustration",
+    "needs": "gentleness, understanding"
+  },
+  {
+    "turn": 30,
+    "speaker": "hamo",
+    "text": "你一点也不傻。人在不稳定的关系里，会把少量温柔当成希望的证明。你坚持，是因为你善良，也因为那份依恋很深。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "relief",
+    "emotion": "soothing",
+    "needs": "relief from shame"
+  },
+  {
+    "turn": 31,
+    "speaker": "user",
+    "text": "我最害怕的是……如果我离开他，我是不是再也不会有人爱我了？",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "internalized_devaluation"
+    ],
+    "victim_state": "fear of abandonment",
+    "emotion": "fear, sadness",
+    "needs": "reassurance, self-worth"
+  },
+  {
+    "turn": 32,
+    "speaker": "hamo",
+    "text": "这种恐惧非常真实。长期被贬低的人，会开始相信‘我不值得被爱’。这是伤痛留下的印记，并不是你的真相。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "healing insight",
+    "emotion": "warm, steady",
+    "needs": "self-worth rebuilding"
+  },
+  {
+    "turn": 33,
+    "speaker": "user",
+    "text": "可是我真的不知道我能不能离开，也不知道我能不能继续下去。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "collapse_under_cycle"
+    ],
+    "victim_state": "overwhelmed",
+    "emotion": "despair",
+    "needs": "stability, guidance"
+  },
+  {
+    "turn": 34,
+    "speaker": "hamo",
+    "text": "你现在不需要做任何重大决定。现在最重要的是：照顾情绪 → 找回现实感 → 建立界限。未来的方向可以慢慢探索。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "regulated",
+    "emotion": "grounding",
+    "needs": "step-by-step plan"
+  },
+  {
+    "turn": 35,
+    "speaker": "user",
+    "text": "那第一步是什么？我想要一点方向。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "seeking guidance",
+    "emotion": "uncertainty",
+    "needs": "clear steps"
+  },
+  {
+    "turn": 36,
+    "speaker": "hamo",
+    "text": "第一步是：把对方的反应与你的价值分开。你可以重复一句：‘他的反应不等于我的价值。’ 这句话会帮助你从循环里抽离。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "internal strengthening",
+    "emotion": "gentle empowerment",
+    "needs": "self-differentiation"
+  },
+  {
+    "turn": 37,
+    "speaker": "user",
+    "text": "我想把这句话写下来……他的反应不等于我的价值。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [
+      "recovery_from_gaslighting"
+    ],
+    "victim_state": "gaining strength",
+    "emotion": "relief",
+    "needs": "identity separation"
+  },
+  {
+    "turn": 38,
+    "speaker": "hamo",
+    "text": "你做得很好。这句话会成为你恢复力量的起点。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "supported",
+    "emotion": "warm",
+    "needs": "reinforcement"
+  },
+  {
+    "turn": 39,
+    "speaker": "user",
+    "text": "谢谢你……我觉得好像第一次有人站在我这边。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "relief, comforted",
+    "emotion": "gratitude",
+    "needs": "being seen"
+  },
+  {
+    "turn": 40,
+    "speaker": "hamo",
+    "text": "我会一直在你这边。你值得稳定、温柔、连续的爱，而不是靠碎片式温柔维持的关系。你不是一个人。",
+    "npd_traits_detected": [],
+    "manipulation_detected": [],
+    "victim_state": "emotional safety achieved",
+    "emotion": "steady compassion",
+    "needs": "secure attachment"
+  }
+]
